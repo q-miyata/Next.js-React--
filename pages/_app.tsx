@@ -1,31 +1,16 @@
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { css } from "@emotion/react"
-import "@/styles/globals.css"; 
+//import "@/styles/globals.css"; 
 import { useState } from 'react';
+import {　styles　} from "./styles";
 
-const styles = css`
-      .board-row:after{
-        clear: both;
-        content: '';
-        display: table;
-      }`;
+
 
 
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
   return (
-    <button css={css` background: pink;
-    border: 1px solid #999;
-    float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
-    width: 34px;`} onClick={onSquareClick}>
+    <button css={styles} onClick={onSquareClick}>
       {value}
     </button>
   );
