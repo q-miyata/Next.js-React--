@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
   return (
-    <button css={styles} onClick={onSquareClick}>
+    <button css={styles.square} onClick={onSquareClick}>
       {value}
     </button>
   );
@@ -39,18 +39,18 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
 
   return (
     <>
-      <div css={css`margin-bottom: 10px;`}>{status}</div>
-      <div css={styles}>
+      <div css={styles.status}>{status}</div>
+      <div css={styles.board_row}>
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
         <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
-      <div css={styles}>
+      <div css={styles.board_row}>
         <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
         <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
         <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
       </div>
-      <div css={styles}>
+      <div css={styles.board_row}>
         <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
@@ -90,12 +90,12 @@ export default function Game() {
   });
 
   return (
-    <div css={css`display: flex;
-    flex-direction: row;`}>
-      <div className="game-board">
+    <div css={styles.game}>
+{/* 以下、className="game-board"を削除 */}
+      <div> 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
-      <div css={css`margin-left: 20px`}>
+      <div css={styles.game_info}>
         <ol>{moves}</ol>
       </div>
     </div>
