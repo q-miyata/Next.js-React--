@@ -1,5 +1,5 @@
-import "@/styles/globals.css"; //パスエイリアスが有効でない
-// import "../styles/globals.css"
+import "@/styles/globals.css"; 
+
 import { useState } from 'react';
 
 
@@ -12,7 +12,7 @@ function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => v
 }
 
 function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]; onPlay: (nextSquares: string[]) => void}) {
-  function handleClick(i:number) {
+  function handleClick(i: number) {
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
@@ -67,7 +67,7 @@ export default function Game() {
     setCurrentMove(nextHistory.length - 1);
   }
 
-  function jumpTo(nextMove:any) {
+  function jumpTo(nextMove:number):void {
     setCurrentMove(nextMove);
   }
 
