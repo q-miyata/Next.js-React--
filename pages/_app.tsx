@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
-//import { css } from "@emotion/react"
+import { css } from "@emotion/react"
 import { styles } from "./_app.styles"
 import { useState } from 'react';
 
@@ -90,9 +90,9 @@ export default function Game() {
   });
 
   return (
-    <div css={styles.game}>
+    <div css={css`display:flex; justify-content: center; align-items:center;height:900px`}>
 {/* 以下、className="game-board"を削除 */}
-      <div> 
+      <div > 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div css={styles.game_info}>

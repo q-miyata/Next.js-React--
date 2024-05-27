@@ -8,6 +8,9 @@ import { Global, css } from "@emotion/react";
 //         }`
 
 export const styles = {
+    findOuterDiv:css`
+    border: 5px solid
+    `,
     square:css`
     background: #fff;
     border: 1px solid #999;
