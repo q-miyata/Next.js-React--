@@ -2,10 +2,12 @@
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { Global, css } from "@emotion/react";
 
-// export const global = css`
-//         body{
-            
-//         }`
+//global の使い方がわからない
+
+export const global = css`
+        body{
+            height: 100%;
+        }`
 
 export const styles = {
     findOuterDiv:css`
