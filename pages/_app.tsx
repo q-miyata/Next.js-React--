@@ -85,14 +85,14 @@ export default function Game() {
     }
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
+        <button css={styles.description}onClick={() => jumpTo(move)}>{description}</button>
       </li>
     );
   });
 
   return (
     
-    <div css={css`display:flex; justify-content: center; align-items:center;height:100vh`}>
+    <div css={styles.pageContainer}>
 {/* 以下、className="game-board"を削除 */}
       <div > 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
