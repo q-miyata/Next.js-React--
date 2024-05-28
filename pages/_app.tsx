@@ -1,7 +1,10 @@
+
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { css } from "@emotion/react"
-import "@/styles/globals.css"; 
+import "@/styles/globals.css";  
+
+
 import { useState } from 'react';
 
 const styles = css`
@@ -87,7 +90,10 @@ export default function Game() {
     setCurrentMove(nextHistory.length - 1);
   }
 
+
   function jumpTo(nextMove:number) :void{
+
+
     setCurrentMove(nextMove);
   }
 
