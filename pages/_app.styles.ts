@@ -23,10 +23,12 @@ export const styles = {
     padding: 0;
     text-align: center;
     width: 80px;
-    :hover{
-        background-color: #efc;
-    }
+    
   `,
+  blankSquares: css`
+  :hover{
+    background-color: lightgreen; 
+  }`,
   board_row: css`
     &::after {
       clear: both;
