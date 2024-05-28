@@ -5,12 +5,19 @@ import { styles } from "./_app.styles"
 import { useState } from 'react';
 
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
+  const squareStyle = [styles.square]
+//配列の後ろの要素がoverrideする。
+  if(!value){
+    squareStyle.push(styles.emptySquare);
+  }
   return (
-    <button css={styles.square} onClick={onSquareClick}>
+    <button css={squareStyle} onClick={onSquareClick}>
       {value}
     </button>
   );
 }
+
+
 
 
 function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]; onPlay: (nextSquares: string[]) => void}) {

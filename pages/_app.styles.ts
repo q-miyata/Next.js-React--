@@ -20,7 +20,7 @@ export const styles = {
   `,
   emptySquare: css`
   :hover{
-    background-color: lightgreen; 
+    background-color: #c0c0c0; 
   }`,
   board_row: css`
     &::after {
