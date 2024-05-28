@@ -1,11 +1,34 @@
-import "@/styles/globals.css"; 
+
+/** @jsxImportSource @emotion/react */
+//このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
+import { css } from "@emotion/react"
+import "@/styles/globals.css";  
+
 
 import { useState } from 'react';
+
+const styles = css`
+      .board-row:after{
+        clear: both;
+        content: '';
+        display: table;
+      }`;
 
 
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button css={css` background: pink;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;`} onClick={onSquareClick}>
       {value}
     </button>
   );
@@ -35,18 +58,18 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
 
   return (
     <>
-      <div className="status">{status}</div>
-      <div className="board-row">
+      <div css={css`margin-bottom: 10px;`}>{status}</div>
+      <div css={styles}>
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
         <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
-      <div className="board-row">
+      <div css={styles}>
         <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
         <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
         <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
       </div>
-      <div className="board-row">
+      <div css={styles}>
         <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
@@ -67,7 +90,10 @@ export default function Game() {
     setCurrentMove(nextHistory.length - 1);
   }
 
-  function jumpTo(nextMove:number):void {
+
+  function jumpTo(nextMove:number) :void{
+
+
     setCurrentMove(nextMove);
   }
 
@@ -86,11 +112,12 @@ export default function Game() {
   });
 
   return (
-    <div className="game">
+    <div css={css`display: flex;
+    flex-direction: row;`}>
       <div className="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
-      <div className="game-info">
+      <div css={css`margin-left: 20px`}>
         <ol>{moves}</ol>
       </div>
     </div>
