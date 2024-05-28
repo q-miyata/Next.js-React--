@@ -25,7 +25,7 @@ export const styles = {
     width: 80px;
     
   `,
-  blankSquares: css`
+  emptySquares: css`
   :hover{
     background-color: lightgreen; 
   }`,

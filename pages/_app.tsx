@@ -1,11 +1,8 @@
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
-import { Global,css } from "@emotion/react"
-import { styles,global } from "./_app.styles"
+import { css } from "@emotion/react"
+import { styles } from "./_app.styles"
 import { useState } from 'react';
-
-
-
 
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
   return (
