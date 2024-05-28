@@ -1,11 +1,6 @@
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
-import { Global, css } from "@emotion/react";
-
-// export const global = css`
-//         body{
-            
-//         }`
+import { css } from "@emotion/react";
 
 export const styles = {
     square:css`
@@ -22,7 +17,7 @@ export const styles = {
     text-align: center;
     width: 34px;
         `,
-    board_row:css`
+    boardRow:css`
     &::after {
         clear: both;
         content: '';
@@ -33,7 +28,7 @@ export const styles = {
     display: flex;
     flex-direction: row;
     `,
-    game_info:css`
+    gameInfo:css`
     margin-left: 20px;
     `,
     status:css`
