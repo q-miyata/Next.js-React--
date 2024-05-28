@@ -23,6 +23,9 @@ export const styles = {
     padding: 0;
     text-align: center;
     width: 80px;
+    :hover{
+        background-color: #efc;
+    }
   `,
   board_row: css`
     &::after {
@@ -40,12 +43,12 @@ export const styles = {
   `,
   status: css`
     margin-bottom: 10px;
-    font-family: MS Gothic;
+    font: italic small-caps bold 16px/2 cursive;
     font-weight: bold;
     font-size:30px;
   `,
   description: css`
-  font-family: MS Gothic;
+  font: italic small-caps bold 16px/2 cursive;
     margin:2px;
     font-size: 16px;
     color: white;
