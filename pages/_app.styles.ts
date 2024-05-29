@@ -33,11 +33,15 @@ export const styles = {
   }`,
   //boardRowの中身を消しても支障ない（たぶん）
     boardRow:css`
+    //display: flex;
+    //flex-direction: row; rowにすると横に並ぶ
+    display: grid;
+    grid-template-rows: 80px;
+    grid-template-columns: 80px 80px 80px; this seems to work right
    
   `,
   game: css`
-  display: flex;
-  flex-direction: row;
+ 
   `,
   gameInfo: css`
     margin-left: 20px;
@@ -64,15 +68,20 @@ export const styles = {
 
     }
   `,
-  pageContainer: css
-  `display:flex; 
+  pageContainer: css`
+  display: grid;
   justify-content: center;
-   align-items:center;
+  align-items: center;
+    //grid-template-rows:  240px 240px ;
+    //grid-template-columns: 1fr 1fr ;
+
+
    height:100vh;
    background-color: pink;
    
    @media (max-width: 767px) {
-    flex-direction: column;
+    display: grid;
+    justify-content: center;
    }
    `
 };
