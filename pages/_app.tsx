@@ -47,6 +47,7 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
     <>
    
       <div css={styles.status}>{status}</div>
+
       <div css={styles.boardRow}>
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -100,12 +101,12 @@ export default function Game() {
   });
 
   return (
-    
     <div css={styles.pageContainer}>
 {/* 以下、className="game-board"を削除 */}
       <div > 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
+      {/* gameInfoを縦に並べたい */}
       <div css={styles.gameInfo}>
         <ol>{moves}</ol>
       </div>
