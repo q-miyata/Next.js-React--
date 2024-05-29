@@ -22,7 +22,7 @@ export const styles = {
   :hover{
     background-color: #c0c0c0; 
   }`,
-  board_row: css`
+  boardRow: css`
     &::after {
       clear: both;
       content: "";
@@ -32,8 +32,8 @@ export const styles = {
   game: css`
     display: flex;
     flex-direction: row;
-  `,
-  game_info: css`
+    `,
+    gameInfo:css`
     margin-left: 20px;
   `,
   status: css`
