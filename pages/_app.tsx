@@ -11,6 +11,7 @@ function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => v
   if(!value){
     squareStyle.push(styles.emptySquare);
   }
+  
   return (
     <button css={squareStyle} onClick={onSquareClick}>
       {value}
@@ -39,6 +40,9 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
+    //ここの行あたりに色をつける変数関数を描きたい（願望）
+  
+
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
