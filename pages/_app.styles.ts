@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
  export const global = 
    css`
   body{
-    color: white !important;
+    color: black !important;
   }
   
 `;
@@ -31,19 +31,13 @@ export const styles = {
   :hover{
     background-color: #c0c0c0; 
   }`,
-  board_row: css`
-    width: 34px;
-        `,
+  //boardRowの中身を消しても支障ない（たぶん）
     boardRow:css`
-    &::after {
-      clear: both;
-      content: "";
-      display: table;
-    }
+   
   `,
   game: css`
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
   `,
   gameInfo: css`
     margin-left: 20px;
