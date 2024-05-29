@@ -5,12 +5,20 @@ import { css } from "@emotion/react"
 import { useState } from 'react';
 
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
+  const squareStyle = [styles.square]
+//配列の後ろの要素がoverrideする。
+  if(!value){
+    squareStyle.push(styles.emptySquare);
+  }
   return (
-    <button css={styles.square} onClick={onSquareClick}>
+    <button css={squareStyle} onClick={onSquareClick}>
       {value}
     </button>
   );
 }
+
+
+
 
 function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]; onPlay: (nextSquares: string[]) => void}) {
   function handleClick(i: number) {
@@ -36,6 +44,7 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
 
   return (
     <>
+   
       <div css={styles.status}>{status}</div>
       <div css={styles.boardRow}>
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
@@ -84,15 +93,16 @@ export default function Game() {
     }
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
+        <button css={styles.description}onClick={() => jumpTo(move)}>{description}</button>
       </li>
     );
   });
 
   return (
-    <div css={styles.game}>
+    
+    <div css={styles.pageContainer}>
 {/* 以下、className="game-board"を削除 */}
-      <div> 
+      <div > 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div css={styles.gameInfo}>
