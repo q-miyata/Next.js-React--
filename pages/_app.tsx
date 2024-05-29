@@ -2,6 +2,7 @@
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { css } from "@emotion/react"
 import { styles } from "./_app.styles"
+import { css } from "@emotion/react"
 import { useState } from 'react';
 
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
@@ -46,17 +47,17 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
     <>
    
       <div css={styles.status}>{status}</div>
-      <div css={styles.board_row}>
+      <div css={styles.boardRow}>
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
         <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
-      <div css={styles.board_row}>
+      <div css={styles.boardRow}>
         <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
         <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
         <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
       </div>
-      <div css={styles.board_row}>
+      <div css={styles.boardRow}>
         <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
@@ -77,7 +78,10 @@ export default function Game() {
     setCurrentMove(nextHistory.length - 1);
   }
 
+
   function jumpTo(nextMove:number) :void{
+
+
     setCurrentMove(nextMove);
   }
 
@@ -102,7 +106,7 @@ export default function Game() {
       <div > 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
-      <div css={styles.game_info}>
+      <div css={styles.gameInfo}>
         <ol>{moves}</ol>
       </div>
     </div>
