@@ -69,19 +69,24 @@ export const styles = {
     }
   `,
   pageContainer: css`
-  display: grid;
-  justify-content: center;
-  align-items: center;
-    //grid-template-rows:  240px 240px ;
-    //grid-template-columns: 1fr 1fr ;
 
+  
+  background-color: pink;
 
-   height:100vh;
-   background-color: pink;
+  @media (min-width:768px){
+    height:100vh;
+    display: grid;
+    grid-template-columns: auto auto; 
+    justify-content: center; 
+    align-items: center; 
+  }
    
    @media (max-width: 767px) {
+    height:100vh;
     display: grid;
     justify-content: center;
+    align-items: center;
+    grid-template-rows: auto auto;
    }
    `
 };
