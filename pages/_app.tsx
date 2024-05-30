@@ -4,21 +4,24 @@ import { styles } from "./_app.styles"
 import { css } from "@emotion/react"
 import { useState } from 'react';
 
-//board から受け取る
-function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
+//board から受け取る ({引数/props}:{引数/propsの型定義})
+function Square({ value, onSquareClick, bingoLine }:{ value: string; onSquareClick: () => void; bingoLine: boolean | null} ) {
   const squareStyle = [styles.square]
 //配列の後ろの要素がoverrideする。
   if(!value){
     squareStyle.push(styles.emptySquare);
   }
-//true判定だったら色をつける
-  
+//true判定だったらビンゴの列に色をつける
+　if(bingoLine){
+  squareStyle.push(styles.winLine);}
+else{
+
   return (
     <button css={squareStyle} onClick={onSquareClick}>
       {value}
     </button>
   );
-}
+}};
 
 
 
@@ -53,21 +56,22 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
     <>
    
       <div css={styles.status}>{status}</div>
-     {/* squaresという配列をレンダリングしている 　インデックスで管理しているのはBoardコンポーネントだから*/}
+     {/* squaresという配列をレンダリングしている 　インデックスで管理しているのはBoardコンポーネントだから
+     bingoLine, "| null" を入れたら直った何で？*/}
       <div css={styles.boardRow}>
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} bingoLine={line && line.includes(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} bingoLine={line && line.includes(0)}/>
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} bingoLine={line && line.includes(0)}/>
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} bingoLine={line && line.includes(0)}/>
       </div>
       <div css={styles.boardRow}>
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} bingoLine={line && line.includes(3)}/>
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} bingoLine={line && line.includes(4)}/>
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} bingoLine={line && line.includes(5)}/>
       </div>
       <div css={styles.boardRow}>
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} bingoLine={line && line.includes(6)}/>
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} bingoLine={line && line.includes(7)}/>
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} bingoLine={line && line.includes(8)}/>
       </div>
     </>
   );
@@ -120,7 +124,7 @@ export default function Game() {
   );
 }
 
-//(引数の型){返り値の型}
+//(引数の型)：{返り値の型}
 function calculateWinner(squares: string[]):{ winner: string | null , line: number[] | null } {
   //どのラインが色つくべきなのか情報を取得したい
   const lines = [
@@ -141,4 +145,4 @@ function calculateWinner(squares: string[]):{ winner: string | null , line: numb
     }
   }
   return { winner: null , line: null};
-}
+    }
