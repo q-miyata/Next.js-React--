@@ -1,16 +1,17 @@
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
-
 import { styles } from "./_app.styles"
 import { css } from "@emotion/react"
 import { useState } from 'react';
 
+//board から受け取る
 function Square({ value, onSquareClick }:{ value: string; onSquareClick: () => void}) {
   const squareStyle = [styles.square]
 //配列の後ろの要素がoverrideする。
   if(!value){
     squareStyle.push(styles.emptySquare);
   }
+//true判定だったら色をつける
   
   return (
     <button css={squareStyle} onClick={onSquareClick}>
@@ -36,13 +37,14 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
+  //オブジェクトにアクセス
+  //const winner = calculateWinner(squares);
+  //caluculatewinner関数でオブジェクトを返しているから
+  const { winner, line } =  calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
-    //ここの行あたりに色をつける変数関数を描きたい（願望）
   
-
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -51,9 +53,9 @@ function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]
     <>
    
       <div css={styles.status}>{status}</div>
-
+     {/* squaresという配列をレンダリングしている 　インデックスで管理しているのはBoardコンポーネントだから*/}
       <div css={styles.boardRow}>
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} bingoLine={line && line.includes(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
         <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
@@ -118,7 +120,9 @@ export default function Game() {
   );
 }
 
-function calculateWinner(squares:string[]) {
+//(引数の型){返り値の型}
+function calculateWinner(squares: string[]):{ winner: string | null , line: number[] | null } {
+  //どのラインが色つくべきなのか情報を取得したい
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -131,9 +135,10 @@ function calculateWinner(squares:string[]) {
   ];
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
+  
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return  { winner: squares[a] , line: lines[i] } //オブジェクトを返す
     }
   }
-  return null;
+  return { winner: null , line: null};
 }
