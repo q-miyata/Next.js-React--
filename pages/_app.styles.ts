@@ -31,10 +31,7 @@ export const styles = {
   :hover{
     background-color: #c0c0c0; 
   }`,
-  board_row: css`
-    width: 34px;
-        `,
-    boardRow:css`
+  boardRow: css`
     &::after {
       clear: both;
       content: "";
