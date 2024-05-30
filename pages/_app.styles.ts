@@ -2,6 +2,15 @@
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { css } from "@emotion/react";
 
+ export const global = 
+   css`
+  body{
+    color: white !important;
+  }
+  
+`;
+
+
 export const styles = {
   square: css`
     background: #fff;
@@ -32,9 +41,12 @@ export const styles = {
   game: css`
     display: flex;
     flex-direction: row;
-    `,
-    gameInfo:css`
+  `,
+  gameInfo: css`
     margin-left: 20px;
+    @media (max-width: 767px){
+      padding-top: 30px;
+    }
   `,
   status: css`
     margin-bottom: 10px;
@@ -61,5 +73,9 @@ export const styles = {
    align-items:center;
    height:100vh;
    background-color: pink;
+   
+   @media (max-width: 767px) {
+    flex-direction: column;
+   }
    `
 };

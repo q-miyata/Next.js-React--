@@ -1,6 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import { Global,css } from "@emotion/react"
-import { styles,global } from "./_app.styles"
+import { css, Global } from "@emotion/react";
+import { global } from "./_app.styles"
 
 
 export default function Document() {
@@ -8,6 +8,8 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body>
+      <Global styles={global} />
+    
         <Main />
         <NextScript />
       </body>
