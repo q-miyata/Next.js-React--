@@ -3,6 +3,24 @@
 import { styles } from "./_app.styles"
 import { css } from "@emotion/react"
 import { useState } from 'react';
+import { lightTheme, darkTheme } from "./_app.styles";
+
+ function Toggle (){
+  const [ isDarkMode, setIsDarkMode] =useState(false);
+function changeMode(){
+  setIsDarkMode(!isDarkMode);
+  }
+  const currentTheme = isDarkMode ? darkTheme : lightTheme;
+
+return(
+  <>
+  <button onClick={changeMode} >Change theme</button>
+  <div css={currentTheme}>
+
+  </div>
+  </>
+)}
+
 
 
 function Square({ value, onSquareClick, bingoSquare }:{ value: string; onSquareClick: () => void; bingoSquare: any} ) {
