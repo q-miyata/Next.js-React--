@@ -3,7 +3,24 @@
 import { styles } from "./_app.styles"
 import { css } from "@emotion/react"
 import { useState } from 'react';
+import ToggleButton from "./darkbutton";
+import { lightTheme, darkTheme } from "./_app.styles";
 
+const App = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
+
+  return (
+    <div css={theme}>
+     
+      <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      <Game />
+    </div>
+  );
+};
+
+export default App;
 
 function Square({ value, onSquareClick, bingoSquare }:{ value: string; onSquareClick: () => void; bingoSquare: any} ) {
   const squareStyle = [styles.square]
@@ -77,7 +94,7 @@ function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
   );
 }
 
-export default function Game() {
+export function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;

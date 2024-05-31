@@ -16,13 +16,13 @@ export const darkTheme = css`
   }
 `;
 
- export const global = 
-   css`
-  body{
-    color: black !important;
-  }
+//  export const global = 
+//    css`
+//   body{
+//     color: black !important;
+//   }
   
-`;
+// `;
 
 
 export const styles = {
@@ -87,9 +87,6 @@ export const styles = {
     }
   `,
   pageContainer: css`
-
-  
-  background-color: pink;
 
   @media (min-width:768px){
     height:100vh;
