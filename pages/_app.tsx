@@ -22,9 +22,16 @@ function Square({ value, onSquareClick, bingoSquare }:{ value: string; onSquareC
     </button>
   );
 };
+// bingoSquare の型で怒られたので修正
+type BoardProps = {
+  xIsNext: boolean;
+  squares: string[];
+  onPlay: (nextSquares: string[]) => void;
+};
 
 
-function Board({ xIsNext, squares, onPlay }:{xIsNext: boolean; squares: string[]; onPlay: (nextSquares: string[]) => void; bingoSquare: any}) {
+
+function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
   function handleClick(i: number) {
     if (calculateWinner(squares).winner || squares[i]) { //ここでスタックしてた
       return;
