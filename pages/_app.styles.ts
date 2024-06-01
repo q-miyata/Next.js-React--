@@ -31,6 +31,10 @@ export const styles = {
   :hover{
     background-color: #c0c0c0; 
   }`,
+　winLine: css`
+  background-color: yellow;
+`,
+
   //boardRowの中身を消しても支障ない（たぶん）
     boardRow:css`
     //display: flex;
