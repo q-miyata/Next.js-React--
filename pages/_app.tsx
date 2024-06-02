@@ -3,6 +3,8 @@
 import { styles } from "./_app.styles"
 import { css } from "@emotion/react"
 import { useState } from 'react';
+import { Header } from "./components/header"
+import { ColorModeProvider } from "@theme-ui/color-modes";
 
 //board から受け取る ({引数/props}:{引数/propsの型定義})
 function Square({ value, onSquareClick, bingoSquare }:{ value: string; onSquareClick: () => void; bingoSquare: any} ) {
@@ -116,7 +118,9 @@ export default function Game() {
   });
 
   return (
+    <ColorModeProvider>
     <div css={styles.pageContainer}>
+      <Header />
 {/* 以下、className="game-board"を削除 */}
       <div > 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
@@ -126,6 +130,7 @@ export default function Game() {
         <ol>{moves}</ol>
       </div>
     </div>
+    </ColorModeProvider>
   );
 }
 

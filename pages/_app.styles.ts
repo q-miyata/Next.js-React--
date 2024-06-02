@@ -2,13 +2,6 @@
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { css } from "@emotion/react";
 
- export const global = 
-   css`
-  body{
-    color: black !important;
-  }
-  
-`;
 
 
 export const styles = {
@@ -75,7 +68,7 @@ export const styles = {
   pageContainer: css`
 
   
-  background-color: pink;
+  //background-color: pink;
 
   @media (min-width:768px){
     height:100vh;
