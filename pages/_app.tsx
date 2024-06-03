@@ -5,7 +5,7 @@ import { css } from "@emotion/react"
 import { useState, useEffect } from 'react';
 import ToggleButton from "./darkbutton";
 import { lightTheme, darkTheme } from "./_app.styles";
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider,Global } from '@emotion/react';
 
 
 
@@ -152,26 +152,23 @@ function calculateWinner(squares: string[]) {
     const App = () => {
       const [isDarkMode, setIsDarkMode] = useState(false);
     
-      useEffect(() => {
-        const savedTheme = localStorage.getItem('dark-mode');
-        if (savedTheme) {
-          setIsDarkMode(JSON.parse(savedTheme));
-        }
-      }, []);
-    
-      useEffect(() => {
-        localStorage.setItem('dark-mode', isDarkMode);
-      }, [isDarkMode]);
-    
-      const theme = isDarkMode ? darkTheme : lightTheme;
+       const theme = isDarkMode ? darkTheme : lightTheme;
     
       return (
-        <ThemeProvider theme={theme}>
+        <>
+        {/* // <ThemeProvider theme={theme}> */}
+          <Global
+        styles={{
+          body:{
+          backgroundColor: theme.body.background,
+          color: theme.body.color
+          }}}/>
           <div css={theme}>
             <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
             <Game />
           </div>
-        </ThemeProvider>
+        {/* // </ThemeProvider> */}
+        </>
       );
     };
     

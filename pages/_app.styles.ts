@@ -3,15 +3,18 @@
 import { css } from "@emotion/react";
 
 export const lightTheme = {
-  background: '#fff',
-  color: '#000',
-};
+  body: {
+    background: '#fff',
+    color: '#000',
+  },
+}
 
-export const darkTheme = {
-  background: '#000',
-  color: '#fff',
-};
-
+export const darkTheme ={
+  body: {
+    background: '#000',
+    color: '#fff',
+  }
+}
 //  export const global = 
 //    css`
 //   body{

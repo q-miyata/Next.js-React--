@@ -6,18 +6,16 @@ import { lightTheme, darkTheme } from "./_app.styles";
 import App from "./_app";
 
 export default function Document() {
-  const isDarkMode = false; 
-  const theme = isDarkMode ? darkTheme : lightTheme;
+  // const isDarkMode = false; 
+  // const theme = isDarkMode ? darkTheme : lightTheme;
 
   return (
     <Html lang="en">
       <Head />
-      <body style={{ backgroundColor: theme.background, color: theme.color }}>
+      <body >
         {/* <Global styles={theme} /> */}
       {/* <App /> */}
        {/* 以下、styles={global}にしてたらダークモードにならなかった */}
-     
-    
         <Main />
         <NextScript />
       </body>
