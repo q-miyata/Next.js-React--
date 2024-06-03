@@ -2,27 +2,29 @@
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { styles } from "./_app.styles"
 import { css } from "@emotion/react"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import ToggleButton from "./darkbutton";
+import { lightTheme, darkTheme } from "./_app.styles";
+import { ThemeProvider,Global } from '@emotion/react';
 
-//board から受け取る ({引数/props}:{引数/propsの型定義})
+
+
 function Square({ value, onSquareClick, bingoSquare }:{ value: string; onSquareClick: () => void; bingoSquare: any} ) {
   const squareStyle = [styles.square]
-//配列の後ろの要素がoverrideする。
+
   if(!value){
     squareStyle.push(styles.emptySquare);
   }
-//true判定だったらビンゴの列に色をつける
  if(bingoSquare){
     squareStyle.push(styles.winLine);
  }
-　//if(winner){}winner とlineを渡さないといけない
   return (
     <button css={squareStyle} onClick={onSquareClick}>
       {value}
     </button>
   );
 };
-// bingoSquare の型で怒られたので修正
+
 type BoardProps = {
   xIsNext: boolean;
   squares: string[];
@@ -44,9 +46,7 @@ function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
     }
     onPlay(nextSquares);
   }
-  //オブジェクトにアクセス
-  //const winner = calculateWinner(squares);
-  //caluculatewinner関数でオブジェクトを返しているから
+
   const  {winner, line}=  calculateWinner(squares);
   let status;
   if (winner) {
@@ -61,8 +61,7 @@ function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
     <>
    
       <div css={styles.status}>{status}</div>
-     {/* squaresという配列をレンダリングしている 　インデックスで管理しているのはBoardコンポーネントだから
-     bingoLine, "| null" を入れたら直った何で？*/}
+     
       <div css={styles.boardRow}>
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} bingoSquare={line?.includes(0)}/>
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} bingoSquare={line?.includes(1)}/>
@@ -81,8 +80,8 @@ function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
     </>
   );
 }
-
-export default function Game() {
+//export 削除する
+ function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -121,7 +120,6 @@ export default function Game() {
       <div > 
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
-      {/* gameInfoを縦に並べたい */}
       <div css={styles.gameInfo}>
         <ol>{moves}</ol>
       </div>
@@ -129,9 +127,8 @@ export default function Game() {
   );
 }
 
-//(引数の型)：{返り値の型}
+
 function calculateWinner(squares: string[]) {
-  //どのラインが色つくべきなのか情報を取得したい
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -146,8 +143,33 @@ function calculateWinner(squares: string[]) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       console.log({ winner: squares[a], line: lines[i] });
-      return   { winner: squares[a], line: lines[i] }; //オブジェクトを返す
+      return   { winner: squares[a], line: lines[i] }; 
     }
   }
   return { winner: null, line: null };
     };
+
+    const App = () => {
+      const [isDarkMode, setIsDarkMode] = useState(false);
+    
+       const theme = isDarkMode ? darkTheme : lightTheme;
+    　　const global= { body:{
+      backgroundColor: theme.body.background,
+      color: theme.body.color
+      }
+
+    }
+      return (
+        <>
+        {/* // <ThemeProvider theme={theme}> */}
+          <Global styles={global}/>
+          <div css={theme}>
+            <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+            <Game />
+          </div>
+        {/* // </ThemeProvider> */}
+        </>
+      );
+    };
+    
+    export default App;
