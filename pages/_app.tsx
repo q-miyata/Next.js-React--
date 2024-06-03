@@ -153,16 +153,16 @@ function calculateWinner(squares: string[]) {
       const [isDarkMode, setIsDarkMode] = useState(false);
     
        const theme = isDarkMode ? darkTheme : lightTheme;
-    
+    　　const global= { body:{
+      backgroundColor: theme.body.background,
+      color: theme.body.color
+      }
+
+    }
       return (
         <>
         {/* // <ThemeProvider theme={theme}> */}
-          <Global
-        styles={{
-          body:{
-          backgroundColor: theme.body.background,
-          color: theme.body.color
-          }}}/>
+          <Global styles={global}/>
           <div css={theme}>
             <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
             <Game />
