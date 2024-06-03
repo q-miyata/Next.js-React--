@@ -1,7 +1,8 @@
+/** @jsxImportSource @emotion/react */
 import { styles } from './_app.styles';
 import { css } from '@emotion/react';
 import Square from './Square';
-/** @jsxImportSource @emotion/react */
+
 type BoardProps = {
   xIsNext: boolean;
   squares: string[];
