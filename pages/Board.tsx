@@ -25,7 +25,10 @@ export default function Board({
     } else {
       nextSquares[i] = 'O';
     }
-    onPlay(nextSquares);
+    onPlay(nextSquares, i);
+    console.log(nextSquares);
+    console.log(i);
+    //このインデックスをわたしたい
   }
 
   const { winner, line } = calculateWinner(squares);
@@ -35,7 +38,6 @@ export default function Board({
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
-  console.log(winner, line);
 
   return (
     <>
@@ -110,7 +112,6 @@ function calculateWinner(squares: string[]) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      console.log({ winner: squares[a], line: lines[i] });
       return { winner: squares[a], line: lines[i] };
     }
   }

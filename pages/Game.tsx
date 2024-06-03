@@ -10,20 +10,31 @@ export default function Game() {
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
-  function handlePlay(nextSquares: string[]) {
+  function handlePlay(nextSquares: string[], i: number) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
+    console.log(i);
   }
 
   function jumpTo(nextMove: number): void {
     setCurrentMove(nextMove);
   }
+  //以下新しい履歴配列からインデックス取ろうとしたけど無理と気づいた。
+  //  function findCoordinate (nextSquares){
+  //     nextSquares.map((singleSquare,i) =>{
+  //         let = i
+  //     })
+  //     return (
+  // let = i
+  //     )
+  //  };
 
   const moves = history.map((squares, move) => {
     let description;
     if (move > 0) {
-      description = 'Go to move #' + move;
+      //とりあえずインデックスを表示させたい
+      description = 'Go to move #' + move + 'index';
     } else {
       description = 'Go to game start';
     }
