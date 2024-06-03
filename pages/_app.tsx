@@ -2,9 +2,10 @@
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { styles } from "./_app.styles"
 import { css } from "@emotion/react"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ToggleButton from "./darkbutton";
 import { lightTheme, darkTheme } from "./_app.styles";
+import { ThemeProvider } from '@emotion/react';
 
 
 
@@ -151,14 +152,26 @@ function calculateWinner(squares: string[]) {
     const App = () => {
       const [isDarkMode, setIsDarkMode] = useState(false);
     
+      useEffect(() => {
+        const savedTheme = localStorage.getItem('dark-mode');
+        if (savedTheme) {
+          setIsDarkMode(JSON.parse(savedTheme));
+        }
+      }, []);
+    
+      useEffect(() => {
+        localStorage.setItem('dark-mode', isDarkMode);
+      }, [isDarkMode]);
+    
       const theme = isDarkMode ? darkTheme : lightTheme;
     
       return (
-        <div css={theme}>
-         
-          <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-          <Game />
-        </div>
+        <ThemeProvider theme={theme}>
+          <div css={theme}>
+            <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+            <Game />
+          </div>
+        </ThemeProvider>
       );
     };
     
