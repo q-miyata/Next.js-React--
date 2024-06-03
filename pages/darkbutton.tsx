@@ -1,10 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import { lightTheme, darkTheme } from "./_app.styles";
+import { lightTheme, darkTheme } from './_app.styles';
 
 const ToggleButton = ({ isDarkMode, setIsDarkMode }) => {
-
   const toggleDarkMode = (checked) => {
     setIsDarkMode(checked);
   };

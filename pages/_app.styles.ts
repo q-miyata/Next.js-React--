@@ -1,28 +1,27 @@
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
-import { css } from "@emotion/react";
+import { css } from '@emotion/react';
 
 export const lightTheme = {
   body: {
     background: '#fff',
     color: '#000',
   },
-}
+};
 
-export const darkTheme ={
+export const darkTheme = {
   body: {
     background: '#000',
     color: '#fff',
-  }
-}
-//  export const global = 
+  },
+};
+//  export const global =
 //    css`
 //   body{
 //     color: black !important;
 //   }
-  
-// `;
 
+// `;
 
 export const styles = {
   square: css`
@@ -38,18 +37,18 @@ export const styles = {
     padding: 0;
     text-align: center;
     width: 80px;
-    
   `,
   emptySquare: css`
-  :hover{
-    background-color: #c0c0c0; 
-  }`,
-　winLine: css`
-  background-color: yellow;
-`,
+    :hover {
+      background-color: #c0c0c0;
+    }
+  `,
+  winLine: css`
+    background-color: yellow;
+  `,
 
   //boardRowの中身を消しても支障ない（たぶん）
-    boardRow:css`
+  boardRow: css`
     //display: flex;
     //flex-direction: row; rowにすると横に並ぶ
     display: grid;
@@ -57,12 +56,10 @@ export const styles = {
     grid-template-columns: 80px 80px 80px; this seems to work right
    
   `,
-  game: css`
- 
-  `,
+  game: css``,
   gameInfo: css`
     margin-left: 20px;
-    @media (max-width: 767px){
+    @media (max-width: 767px) {
       padding-top: 30px;
     }
   `,
@@ -70,37 +67,35 @@ export const styles = {
     margin-bottom: 10px;
     font: italic small-caps bold 16px/2 cursive;
     font-weight: bold;
-    font-size:30px;
+    font-size: 30px;
   `,
   description: css`
-  font: italic small-caps bold 16px/2 cursive;
-    margin:2px;
+    font: italic small-caps bold 16px/2 cursive;
+    margin: 2px;
     font-size: 16px;
     color: white;
     background-color: black;
     cursor: default;
     :hover {
       background-color: white;
-      color:black;
-
+      color: black;
     }
   `,
   pageContainer: css`
+    @media (min-width: 768px) {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: auto auto;
+      justify-content: center;
+      align-items: center;
+    }
 
-  @media (min-width:768px){
-    height:100vh;
-    display: grid;
-    grid-template-columns: auto auto; 
-    justify-content: center; 
-    align-items: center; 
-  }
-   
-   @media (max-width: 767px) {
-    height:100vh;
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    grid-template-rows: auto auto;
-   }
-   `
+    @media (max-width: 767px) {
+      height: 100vh;
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      grid-template-rows: auto auto;
+    }
+  `,
 };

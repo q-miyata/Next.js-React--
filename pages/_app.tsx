@@ -1,29 +1,35 @@
 /** @jsxImportSource @emotion/react */
 //このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
-import { styles } from "./_app.styles"
-import { css } from "@emotion/react"
+import { styles } from './_app.styles';
+import { css } from '@emotion/react';
 import { useState, useEffect } from 'react';
-import ToggleButton from "./darkbutton";
-import { lightTheme, darkTheme } from "./_app.styles";
-import { ThemeProvider,Global } from '@emotion/react';
+import ToggleButton from './darkbutton';
+import { lightTheme, darkTheme } from './_app.styles';
+import { ThemeProvider, Global } from '@emotion/react';
 
+function Square({
+  value,
+  onSquareClick,
+  bingoSquare,
+}: {
+  value: string;
+  onSquareClick: () => void;
+  bingoSquare: any;
+}) {
+  const squareStyle = [styles.square];
 
-
-function Square({ value, onSquareClick, bingoSquare }:{ value: string; onSquareClick: () => void; bingoSquare: any} ) {
-  const squareStyle = [styles.square]
-
-  if(!value){
+  if (!value) {
     squareStyle.push(styles.emptySquare);
   }
- if(bingoSquare){
+  if (bingoSquare) {
     squareStyle.push(styles.winLine);
- }
+  }
   return (
     <button css={squareStyle} onClick={onSquareClick}>
       {value}
     </button>
   );
-};
+}
 
 type BoardProps = {
   xIsNext: boolean;
@@ -31,11 +37,10 @@ type BoardProps = {
   onPlay: (nextSquares: string[]) => void;
 };
 
-
-
-function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
+function Board({ xIsNext, squares, onPlay }: BoardProps): JSX.Element {
   function handleClick(i: number) {
-    if (calculateWinner(squares).winner || squares[i]) { //ここでスタックしてた
+    if (calculateWinner(squares).winner || squares[i]) {
+      //ここでスタックしてた
       return;
     }
     const nextSquares = squares.slice();
@@ -47,56 +52,87 @@ function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
     onPlay(nextSquares);
   }
 
-  const  {winner, line}=  calculateWinner(squares);
+  const { winner, line } = calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
-  
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
- console.log(winner, line);
+  console.log(winner, line);
 
   return (
     <>
-   
       <div css={styles.status}>{status}</div>
-     
+
       <div css={styles.boardRow}>
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} bingoSquare={line?.includes(0)}/>
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} bingoSquare={line?.includes(1)}/>
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} bingoSquare={line?.includes(2)}/>
+        <Square
+          value={squares[0]}
+          onSquareClick={() => handleClick(0)}
+          bingoSquare={line?.includes(0)}
+        />
+        <Square
+          value={squares[1]}
+          onSquareClick={() => handleClick(1)}
+          bingoSquare={line?.includes(1)}
+        />
+        <Square
+          value={squares[2]}
+          onSquareClick={() => handleClick(2)}
+          bingoSquare={line?.includes(2)}
+        />
       </div>
       <div css={styles.boardRow}>
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} bingoSquare={line?.includes(3)}/>
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} bingoSquare={line?.includes(4)}/>
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} bingoSquare={line?.includes(5)}/>
+        <Square
+          value={squares[3]}
+          onSquareClick={() => handleClick(3)}
+          bingoSquare={line?.includes(3)}
+        />
+        <Square
+          value={squares[4]}
+          onSquareClick={() => handleClick(4)}
+          bingoSquare={line?.includes(4)}
+        />
+        <Square
+          value={squares[5]}
+          onSquareClick={() => handleClick(5)}
+          bingoSquare={line?.includes(5)}
+        />
       </div>
       <div css={styles.boardRow}>
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} bingoSquare={line?.includes(6)}/>
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} bingoSquare={line?.includes(7)}/>
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} bingoSquare={line?.includes(8)}/>
+        <Square
+          value={squares[6]}
+          onSquareClick={() => handleClick(6)}
+          bingoSquare={line?.includes(6)}
+        />
+        <Square
+          value={squares[7]}
+          onSquareClick={() => handleClick(7)}
+          bingoSquare={line?.includes(7)}
+        />
+        <Square
+          value={squares[8]}
+          onSquareClick={() => handleClick(8)}
+          bingoSquare={line?.includes(8)}
+        />
       </div>
     </>
   );
 }
 //export 削除する
- function Game() {
+function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
-  function handlePlay(nextSquares:string[]) {
+  function handlePlay(nextSquares: string[]) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   }
 
-
-  function jumpTo(nextMove:number) :void{
-
-
+  function jumpTo(nextMove: number): void {
     setCurrentMove(nextMove);
   }
 
@@ -109,15 +145,17 @@ function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
     }
     return (
       <li key={move}>
-        <button css={styles.description}onClick={() => jumpTo(move)}>{description}</button>
+        <button css={styles.description} onClick={() => jumpTo(move)}>
+          {description}
+        </button>
       </li>
     );
   });
 
   return (
     <div css={styles.pageContainer}>
-{/* 以下、className="game-board"を削除 */}
-      <div > 
+      {/* 以下、className="game-board"を削除 */}
+      <div>
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div css={styles.gameInfo}>
@@ -126,7 +164,6 @@ function Board({ xIsNext, squares, onPlay }:BoardProps): JSX.Element {
     </div>
   );
 }
-
 
 function calculateWinner(squares: string[]) {
   const lines = [
@@ -143,33 +180,33 @@ function calculateWinner(squares: string[]) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       console.log({ winner: squares[a], line: lines[i] });
-      return   { winner: squares[a], line: lines[i] }; 
+      return { winner: squares[a], line: lines[i] };
     }
   }
   return { winner: null, line: null };
-    };
+}
 
-    const App = () => {
-      const [isDarkMode, setIsDarkMode] = useState(false);
-    
-       const theme = isDarkMode ? darkTheme : lightTheme;
-    　　const global= { body:{
+const App = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
+  const global = {
+    body: {
       backgroundColor: theme.body.background,
-      color: theme.body.color
-      }
+      color: theme.body.color,
+    },
+  };
+  return (
+    <>
+      {/* // <ThemeProvider theme={theme}> */}
+      <Global styles={global} />
+      <div css={theme}>
+        <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        <Game />
+      </div>
+      {/* // </ThemeProvider> */}
+    </>
+  );
+};
 
-    }
-      return (
-        <>
-        {/* // <ThemeProvider theme={theme}> */}
-          <Global styles={global}/>
-          <div css={theme}>
-            <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-            <Game />
-          </div>
-        {/* // </ThemeProvider> */}
-        </>
-      );
-    };
-    
-    export default App;
+export default App;
