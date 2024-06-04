@@ -5,8 +5,9 @@ import Square from './Square';
 
 type BoardProps = {
   xIsNext: boolean;
-  squares: string[];
-  onPlay: (nextSquares: string[]) => void;
+  squares: (string | null)[];
+  //オブジェクトを受け取る
+  onPlay: (nextSquares: (string | null)[], i: number) => void;
 };
 
 export default function Board({
@@ -25,10 +26,8 @@ export default function Board({
     } else {
       nextSquares[i] = 'O';
     }
-    onPlay(nextSquares, i);
+    onPlay(nextSquares);
     console.log(nextSquares);
-    console.log(i);
-    //このインデックスをわたしたい
   }
 
   const { winner, line } = calculateWinner(squares);

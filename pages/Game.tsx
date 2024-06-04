@@ -4,14 +4,25 @@ import { styles } from './_app.styles';
 import { css } from '@emotion/react';
 import Board from './Board';
 
+//type SquareType = string | null;
+
 export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
+  //下記、historyにindexプロパティを持たせている（オブジェクトにしている）indexも履歴と一緒に残しておきたい
+  const [history, setHistory] = useState([
+    { squares: Array(9).fill(null), index: null },
+  ]);
   const [currentMove, setCurrentMove] = useState(0);
+  //下記インデックスを渡す試み
+  //const [pushedI, setpushedI] = useState<number | null>(null);
+  //moveは動いた回数
   const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
+  const currentSquares = history[currentMove].squares;
 
   function handlePlay(nextSquares: string[], i: number) {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    const nextHistory = [
+      ...history.slice(0, currentMove + 1),
+      { squares: nextSquares, index: i },
+    ];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
     console.log(i);
@@ -20,21 +31,13 @@ export default function Game() {
   function jumpTo(nextMove: number): void {
     setCurrentMove(nextMove);
   }
-  //以下新しい履歴配列からインデックス取ろうとしたけど無理と気づいた。
-  //  function findCoordinate (nextSquares){
-  //     nextSquares.map((singleSquare,i) =>{
-  //         let = i
-  //     })
-  //     return (
-  // let = i
-  //     )
-  //  };
 
-  const moves = history.map((squares, move) => {
+  //stepオブジェクトを持ってくる
+  const moves = history.map((step, move) => {
     let description;
     if (move > 0) {
       //とりあえずインデックスを表示させたい
-      description = 'Go to move #' + move + 'index';
+      description = `Go to move #${move} , index: ${step.index}`;
     } else {
       description = 'Go to game start';
     }
