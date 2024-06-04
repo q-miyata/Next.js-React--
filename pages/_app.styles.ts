@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-//このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
 import { css } from '@emotion/react';
 
 export const lightTheme = {

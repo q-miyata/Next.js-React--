@@ -4,11 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "craco build",
+    "start": "craco start",
+    "test": "craco test",
     "lint": "next lint"
   },
   "dependencies": {
+    "@craco/craco": "^7.1.0",
+    "@emotion/babel-plugin": "^11.11.0",
+    "@emotion/babel-preset-css-prop": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "next": "14.2.3",
     "react": "^18",

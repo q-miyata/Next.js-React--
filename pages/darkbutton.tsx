@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
