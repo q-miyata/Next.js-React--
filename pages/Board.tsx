@@ -26,7 +26,7 @@ export default function Board({
     } else {
       nextSquares[i] = 'O';
     }
-    onPlay(nextSquares);
+    onPlay(nextSquares, i);
     console.log(nextSquares);
   }
 
