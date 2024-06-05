@@ -1,11 +1,15 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import { lightTheme, darkTheme } from './_app.styles';
-import { css } from '@emotion/react';
 
-const ToggleButton = ({ isDarkMode, setIsDarkMode }) => {
-  const toggleDarkMode = (checked) => {
+//Type Alias　を使用。 引数に直接定義しても良い。
+
+type Props = {
+  isDarkMode: boolean;
+  setIsDarkMode: (checked: boolean) => void;
+};
+
+//今回はreact.fcを使わなかった
+const ToggleButton = ({ isDarkMode, setIsDarkMode }: Props) => {
+  const toggleDarkMode = (checked: boolean) => {
     setIsDarkMode(checked);
   };
 

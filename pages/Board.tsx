@@ -4,9 +4,9 @@ import Square from './Square';
 
 type BoardProps = {
   xIsNext: boolean;
-  squares: (string | null)[];
+  squares: ('X' | 'O' | null)[];
   //オブジェクトを受け取る
-  onPlay: (nextSquares: (string | null)[], i: number) => void;
+  onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
 };
 
 export default function Board({
@@ -97,7 +97,7 @@ export default function Board({
   );
 }
 
-function calculateWinner(squares: string[]) {
+function calculateWinner(squares: ('X' | 'O' | null)[]) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],

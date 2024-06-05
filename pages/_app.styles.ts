@@ -13,13 +13,6 @@ export const darkTheme = {
     color: '#fff',
   },
 };
-//  export const global =
-//    css`
-//   body{
-//     color: black !important;
-//   }
-
-// `;
 
 export const styles = {
   square: css`
@@ -45,7 +38,6 @@ export const styles = {
     background-color: yellow;
   `,
 
-  //boardRowの中身を消しても支障ない（たぶん）
   boardRow: css`
     //display: flex;
     //flex-direction: row; rowにすると横に並ぶ

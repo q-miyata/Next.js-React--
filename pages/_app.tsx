@@ -1,6 +1,4 @@
-import { styles } from './_app.styles';
-import { css } from '@emotion/react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ToggleButton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';

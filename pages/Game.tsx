@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { styles } from './_app.styles';
-//import { css } from '@emotion/react';
+
 import Board from './Board';
 
 export default function Game() {
@@ -9,7 +9,6 @@ export default function Game() {
   ]);
   const [currentMove, setCurrentMove] = useState(0);
 
-  //const [pushedI, setpushedI] = useState<number | null>(null);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
 
