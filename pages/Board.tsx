@@ -1,5 +1,5 @@
 import { styles } from './_app.styles';
-import { css } from '@emotion/react';
+
 import Square from './Square';
 
 type BoardProps = {

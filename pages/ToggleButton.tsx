@@ -1,7 +1,6 @@
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 //Type Alias　を使用。 引数に直接定義しても良い。
-
 type Props = {
   isDarkMode: boolean;
   setIsDarkMode: (checked: boolean) => void;

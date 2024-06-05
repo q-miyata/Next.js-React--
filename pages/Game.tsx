@@ -3,20 +3,26 @@ import { styles } from './_app.styles';
 
 import Board from './Board';
 
+type historyObject = {
+  squares: ('X' | 'O' | null)[];
+  index: number | undefined;
+};
+
 export default function Game() {
-  const [history, setHistory] = useState([
-    { squares: Array(9).fill(null), index: null },
+  const [history, setHistory] = useState<historyObject[]>([
+    { squares: Array(9).fill(null), index: undefined },
   ]);
-  const [currentMove, setCurrentMove] = useState(0);
+  const [currentMove, setCurrentMove] = useState<number>(0);
 
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
 
-  function handlePlay(nextSquares: string[], i: number) {
+  function handlePlay(nextSquares: ('X' | 'O' | null)[], i: number) {
     const nextHistory = [
       ...history.slice(0, currentMove + 1),
       { squares: nextSquares, index: i },
     ];
+
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
     console.log(i);
@@ -26,15 +32,12 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
-  //stepオブジェクトを持ってくる
   const moves = history.map((step, move) => {
     let description;
 
     const coordinate = indexToCoordinate(step.index);
 
     if (move > 0) {
-      //この中で取得したインデックスを変更
-
       description = `Go to move #${move}  ${coordinate}`;
     } else {
       description = 'Go to game start';
@@ -50,7 +53,6 @@ export default function Game() {
 
   return (
     <div css={styles.pageContainer}>
-      {/* 以下、className="game-board"を削除 */}
       <div>
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
@@ -61,8 +63,10 @@ export default function Game() {
   );
 }
 
-//just for now
-function indexToCoordinate(index: number): any {
+function indexToCoordinate(index: number | undefined): String {
+  if (index === undefined) {
+    return '';
+  }
   if (index <= 2) {
     return 'A' + (index + 1);
   }
@@ -71,5 +75,7 @@ function indexToCoordinate(index: number): any {
   }
   if (index <= 8) {
     return 'C' + (index - 5);
+  } else {
+    return '';
   }
 }
