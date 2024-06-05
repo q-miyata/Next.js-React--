@@ -16,7 +16,6 @@ export default function Board({
 }: BoardProps): JSX.Element {
   function handleClick(i: number) {
     if (calculateWinner(squares).winner || squares[i]) {
-      //ここでスタックしてた
       return;
     }
     const nextSquares = squares.slice();
@@ -25,6 +24,7 @@ export default function Board({
     } else {
       nextSquares[i] = 'O';
     }
+
     onPlay(nextSquares, i);
     console.log(nextSquares);
   }
@@ -92,6 +92,7 @@ export default function Board({
           bingoSquare={line?.includes(8)}
         />
       </div>
+      <h4 css={styles.h4}>注：行:A,B,C 列:1,2,3</h4>
     </>
   );
 }

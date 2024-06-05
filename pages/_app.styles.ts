@@ -79,6 +79,9 @@ export const styles = {
       color: black;
     }
   `,
+  h4: css`
+    font: italic small-caps bold 16px/2 cursive;
+  `,
   pageContainer: css`
     @media (min-width: 768px) {
       height: 100vh;

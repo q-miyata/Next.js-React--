@@ -1,7 +1,7 @@
 import { Html, Head, Main, NextScript } from 'next/document';
 import { css, Global } from '@emotion/react';
 import { global } from './_app.styles';
-import Togglebutton from './darkbutton';
+import Togglebutton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import App from './_app';
 

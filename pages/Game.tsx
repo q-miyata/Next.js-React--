@@ -1,19 +1,15 @@
 import { useState } from 'react';
 import { styles } from './_app.styles';
-import { css } from '@emotion/react';
+//import { css } from '@emotion/react';
 import Board from './Board';
 
-//type SquareType = string | null;
-
 export default function Game() {
-  //下記、historyにindexプロパティを持たせている（オブジェクトにしている）indexも履歴と一緒に残しておきたい
   const [history, setHistory] = useState([
     { squares: Array(9).fill(null), index: null },
   ]);
   const [currentMove, setCurrentMove] = useState(0);
-  //下記インデックスを渡す試み
+
   //const [pushedI, setpushedI] = useState<number | null>(null);
-  //moveは動いた回数
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
 
@@ -34,9 +30,13 @@ export default function Game() {
   //stepオブジェクトを持ってくる
   const moves = history.map((step, move) => {
     let description;
+
+    const coordinate = indexToCoordinate(step.index);
+
     if (move > 0) {
-      //とりあえずインデックスを表示させたい
-      description = `Go to move #${move} , index: ${step.index}`;
+      //この中で取得したインデックスを変更
+
+      description = `Go to move #${move}  ${coordinate}`;
     } else {
       description = 'Go to game start';
     }
@@ -60,4 +60,17 @@ export default function Game() {
       </div>
     </div>
   );
+}
+
+//just for now
+function indexToCoordinate(index: number): any {
+  if (index <= 2) {
+    return 'A' + (index + 1);
+  }
+  if (index <= 5) {
+    return 'B' + (index - 2);
+  }
+  if (index <= 8) {
+    return 'C' + (index - 5);
+  }
 }

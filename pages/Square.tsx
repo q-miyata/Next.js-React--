@@ -1,12 +1,13 @@
 import { styles } from './_app.styles';
-import { css } from '@emotion/react';
+// import { css } from '@emotion/react';
 
 export default function Square({
   value,
   onSquareClick,
   bingoSquare,
 }: {
-  value: string;
+  //下記、null を足すべき？
+  value: 'X' | 'O';
   onSquareClick: () => void;
   bingoSquare: any;
 }) {
