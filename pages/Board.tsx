@@ -29,7 +29,8 @@ export default function Board({
     console.log(nextSquares);
   }
 
-  const { winner, line } = calculateWinner(squares);
+  const { winner, line }: { winner: 'X' | 'O' | null; line: number[] | null } =
+    calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
@@ -45,59 +46,63 @@ export default function Board({
         <Square
           value={squares[0]}
           onSquareClick={() => handleClick(0)}
-          bingoSquare={line?.includes(0)}
+          bingoSquare={Boolean(line?.includes(0))}
         />
         <Square
           value={squares[1]}
           onSquareClick={() => handleClick(1)}
-          bingoSquare={line?.includes(1)}
+          bingoSquare={Boolean(line?.includes(1))}
         />
         <Square
           value={squares[2]}
           onSquareClick={() => handleClick(2)}
-          bingoSquare={line?.includes(2)}
+          bingoSquare={Boolean(line?.includes(2))}
         />
       </div>
       <div css={styles.boardRow}>
         <Square
           value={squares[3]}
           onSquareClick={() => handleClick(3)}
-          bingoSquare={line?.includes(3)}
+          bingoSquare={Boolean(line?.includes(3))}
         />
         <Square
           value={squares[4]}
           onSquareClick={() => handleClick(4)}
-          bingoSquare={line?.includes(4)}
+          bingoSquare={Boolean(line?.includes(4))}
         />
         <Square
           value={squares[5]}
           onSquareClick={() => handleClick(5)}
-          bingoSquare={line?.includes(5)}
+          bingoSquare={Boolean(line?.includes(5))}
         />
       </div>
       <div css={styles.boardRow}>
         <Square
           value={squares[6]}
           onSquareClick={() => handleClick(6)}
-          bingoSquare={line?.includes(6)}
+          bingoSquare={Boolean(line?.includes(6))}
         />
         <Square
           value={squares[7]}
           onSquareClick={() => handleClick(7)}
-          bingoSquare={line?.includes(7)}
+          bingoSquare={Boolean(line?.includes(7))}
         />
         <Square
           value={squares[8]}
           onSquareClick={() => handleClick(8)}
-          bingoSquare={line?.includes(8)}
+          bingoSquare={Boolean(line?.includes(8))}
         />
       </div>
-      <h4 css={styles.h4}>注：行:A,B,C 列:1,2,3</h4>
+      <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>
     </>
   );
 }
 
-function calculateWinner(squares: ('X' | 'O' | null)[]) {
+type bingo = ('X' | 'O' | null)[];
+
+type line = number[] | null;
+
+function calculateWinner(squares: bingo) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],

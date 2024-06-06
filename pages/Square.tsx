@@ -7,7 +7,7 @@ export default function Square({
 }: {
   value: 'X' | 'O' | null;
   onSquareClick: () => void;
-  bingoSquare: boolean | undefined;
+  bingoSquare: boolean;
 }) {
   const squareStyle = [styles.square];
 

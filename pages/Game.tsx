@@ -64,18 +64,27 @@ export default function Game() {
 }
 
 function indexToCoordinate(index: number | undefined): String {
+  let horizontalLine = '';
+  let verticalLine = '';
   if (index === undefined) {
     return '';
   }
-  if (index <= 2) {
-    return 'A' + (index + 1);
-  }
-  if (index <= 5) {
-    return 'B' + (index - 2);
-  }
-  if (index <= 8) {
-    return 'C' + (index - 5);
+
+  //Determine horizontal line
+  let row = ['1', '2', '3'];
+
+  horizontalLine = row[Math.floor(index / 3)];
+
+  //Determin vertacal line
+  if (index % 3 === 0) {
+    verticalLine = 'A';
+  } else if (index % 3 === 1) {
+    verticalLine = 'B';
+  } else if (index % 3 === 2) {
+    verticalLine = 'C';
   } else {
     return '';
   }
+
+  return verticalLine + horizontalLine;
 }
