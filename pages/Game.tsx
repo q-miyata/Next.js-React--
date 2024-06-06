@@ -17,9 +17,10 @@ export default function Game() {
 
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
+
   //ボード選択
-  const [boardSize, setBoardSize] = useState(null);
-  const handleBoardSelection = (size) => {
+  const [boardSize, setBoardSize] = useState<number | null>(null);
+  const handleBoardSelection = (size: number): void => {
     setBoardSize(size);
   };
 
@@ -31,7 +32,6 @@ export default function Game() {
 
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
-    console.log(i);
   }
 
   function jumpTo(nextMove: number): void {
@@ -41,13 +41,16 @@ export default function Game() {
   const moves = history.map((step, move) => {
     let description;
 
-    const coordinate = indexToCoordinate(step.index);
+    const coordinate = indexToCoordinate(step.index, boardSize);
 
     if (move > 0) {
       description = `Go to move #${move}  ${coordinate}`;
-    } else {
+    } else if (move === 0) {
       description = 'Go to game start';
+    } else {
+      description = '';
     }
+
     return (
       <li key={move}>
         <button css={styles.description} onClick={() => jumpTo(move)}>
@@ -98,56 +101,42 @@ export default function Game() {
   );
 }
 
-//4マス用に新しいインデックス→座標関数
+//index refers to step.index in Board function
+//size refers to boardSize in Board function
 
-function indexToCoordinate(index: number | undefined): String {
+function indexToCoordinate(
+  index: number | undefined,
+  size: number | null
+): String {
   let horizontalLine = '';
   let verticalLine = '';
   if (index === undefined) {
     return '';
   }
+  if (size === 3) {
+    //Determine horizontal line
+    let row = ['1', '2', '3'];
 
-  //Determine horizontal line
-  let row = ['1', '2', '3'];
+    horizontalLine = row[Math.floor(index / 3)];
 
-  horizontalLine = row[Math.floor(index / 3)];
-
-  //Determin vertacal line
-  if (index % 3 === 0) {
-    verticalLine = 'A';
-  } else if (index % 3 === 1) {
-    verticalLine = 'B';
-  } else if (index % 3 === 2) {
-    verticalLine = 'C';
-  } else {
+    //Determin vertacal line
+    if (index % 3 === 0) {
+      verticalLine = 'A';
+    } else if (index % 3 === 1) {
+      verticalLine = 'B';
+    } else if (index % 3 === 2) {
+      verticalLine = 'C';
+    } else {
+      return '';
+    }
+  } else if (size === 4) {
+    let row = ['1', '2', '3', '4'];
+    let column = ['A', 'B', 'C', 'D'];
+    verticalLine = column[index % 4];
+    horizontalLine = row[Math.floor(index / 4)];
+  } else if (size === null) {
     return '';
   }
 
   return verticalLine + horizontalLine;
 }
-
-// function indexToCoordinate(index: number | undefined): String {
-//   let horizontalLine = '';
-//   let verticalLine = '';
-//   if (index === undefined) {
-//     return '';
-//   }
-
-//   //Determine horizontal line
-//   let row = ['1', '2', '3'];
-
-//   horizontalLine = row[Math.floor(index / 3)];
-
-//   //Determin vertacal line
-//   if (index % 3 === 0) {
-//     verticalLine = 'A';
-//   } else if (index % 3 === 1) {
-//     verticalLine = 'B';
-//   } else if (index % 3 === 2) {
-//     verticalLine = 'C';
-//   } else {
-//     return '';
-//   }
-
-//   return verticalLine + horizontalLine;
-// }

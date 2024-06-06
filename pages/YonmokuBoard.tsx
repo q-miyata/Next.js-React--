@@ -1,3 +1,4 @@
+//四目並べ、特に履歴変えなくても問題ないっぽい？
 import { styles } from './_app.styles';
 
 import Square from './Square';
@@ -26,7 +27,6 @@ export default function YonmokuBoard({
     }
 
     onPlay(nextSquares, i);
-    console.log(nextSquares);
   }
 
   const { winner, line }: { winner: 'X' | 'O' | null; line: number[] | null } =
