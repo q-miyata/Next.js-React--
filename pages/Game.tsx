@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { styles } from './_app.styles';
 
 import Board from './Board';
+import YonmokuBoard from './YonmokuBoard';
 
 type historyObject = {
   squares: ('X' | 'O' | null)[];
@@ -16,6 +17,11 @@ export default function Game() {
 
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
+  //ボード選択
+  const [boardSize, setBoardSize] = useState(null);
+  const handleBoardSelection = (size) => {
+    setBoardSize(size);
+  };
 
   function handlePlay(nextSquares: ('X' | 'O' | null)[], i: number) {
     const nextHistory = [
@@ -54,7 +60,36 @@ export default function Game() {
   return (
     <div css={styles.pageContainer}>
       <div>
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <div>
+          {boardSize === null ? (
+            <div>
+              <button
+                css={styles.button}
+                onClick={() => handleBoardSelection(3)}
+              >
+                board ３✖︎３
+              </button>
+              <button
+                css={styles.button}
+                onClick={() => handleBoardSelection(4)}
+              >
+                board ４✖︎４
+              </button>
+            </div>
+          ) : boardSize === 3 ? (
+            <Board
+              xIsNext={xIsNext}
+              squares={currentSquares}
+              onPlay={handlePlay}
+            />
+          ) : (
+            <YonmokuBoard
+              xIsNext={xIsNext}
+              squares={currentSquares}
+              onPlay={handlePlay}
+            />
+          )}
+        </div>
       </div>
       <div css={styles.gameInfo}>
         <ol>{moves}</ol>
@@ -62,6 +97,8 @@ export default function Game() {
     </div>
   );
 }
+
+//4マス用に新しいインデックス→座標関数
 
 function indexToCoordinate(index: number | undefined): String {
   let horizontalLine = '';
@@ -88,3 +125,29 @@ function indexToCoordinate(index: number | undefined): String {
 
   return verticalLine + horizontalLine;
 }
+
+// function indexToCoordinate(index: number | undefined): String {
+//   let horizontalLine = '';
+//   let verticalLine = '';
+//   if (index === undefined) {
+//     return '';
+//   }
+
+//   //Determine horizontal line
+//   let row = ['1', '2', '3'];
+
+//   horizontalLine = row[Math.floor(index / 3)];
+
+//   //Determin vertacal line
+//   if (index % 3 === 0) {
+//     verticalLine = 'A';
+//   } else if (index % 3 === 1) {
+//     verticalLine = 'B';
+//   } else if (index % 3 === 2) {
+//     verticalLine = 'C';
+//   } else {
+//     return '';
+//   }
+
+//   return verticalLine + horizontalLine;
+// }
