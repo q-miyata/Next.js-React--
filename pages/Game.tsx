@@ -4,13 +4,13 @@ import { styles } from './_app.styles';
 import Board from './Board';
 import YonmokuBoard from './YonmokuBoard';
 
-type historyObject = {
+type HistoryObject = {
   squares: ('X' | 'O' | null)[];
   index: number | undefined;
 };
 
 export default function Game() {
-  const [history, setHistory] = useState<historyObject[]>([
+  const [history, setHistory] = useState<HistoryObject[]>([
     { squares: Array(9).fill(null), index: undefined },
   ]);
   const [currentMove, setCurrentMove] = useState<number>(0);

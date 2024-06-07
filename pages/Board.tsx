@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { styles } from './_app.styles';
 
 import Square from './Square';
@@ -5,7 +6,6 @@ import Square from './Square';
 type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
-  //オブジェクトを受け取る
   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
 };
 
@@ -29,8 +29,12 @@ export default function Board({
     console.log(nextSquares);
   }
 
-  const { winner, line }: { winner: 'X' | 'O' | null; line: number[] | null } =
-    calculateWinner(squares);
+  type WinnerLine = {
+    winner: 'X' | 'O' | null;
+    line: number[] | null;
+  };
+
+  const { winner, line }: WinnerLine = calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
@@ -98,11 +102,9 @@ export default function Board({
   );
 }
 
-type bingo = ('X' | 'O' | null)[];
+type Bingo = ('X' | 'O' | null)[];
 
-type line = number[] | null;
-
-function calculateWinner(squares: bingo) {
+function calculateWinner(squares: Bingo) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
