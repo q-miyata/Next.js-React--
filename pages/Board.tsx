@@ -26,14 +26,19 @@ export default function Board({
     }
 
     onPlay(nextSquares, i);
-    console.log(nextSquares);
   }
 
-  const { winner, line }: { winner: 'X' | 'O' | null; line: number[] | null } =
+  const {
+    winner,
+    line,
+    isDraw,
+  }: { winner: 'X' | 'O' | null; line: number[] | null; isDraw: boolean } =
     calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
+  } else if (isDraw) {
+    status = 'Drawwwwww(o_o)/';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -98,11 +103,11 @@ export default function Board({
   );
 }
 
-type bingo = ('X' | 'O' | null)[];
+type Bingo = ('X' | 'O' | null)[];
 
 type line = number[] | null;
 
-function calculateWinner(squares: bingo) {
+function calculateWinner(squares: Bingo) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -113,11 +118,17 @@ function calculateWinner(squares: bingo) {
     [0, 4, 8],
     [2, 4, 6],
   ];
+
+  console.log(squares);
+
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], line: lines[i] };
+      return { winner: squares[a], line: lines[i], isDraw: false };
     }
   }
-  return { winner: null, line: null };
+  //everyメソッドtest関数を実行してtrue falseで返す。
+  const isDraw = squares.every((square) => square !== null);
+
+  return { winner: null, line: null, isDraw };
 }

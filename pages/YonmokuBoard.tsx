@@ -135,11 +135,9 @@ export default function YonmokuBoard({
   );
 }
 
-type bingo = ('X' | 'O' | null)[];
+type Bingo = ('X' | 'O' | null)[];
 
-// type line = number[] | null;　後で削除する
-
-function calculateWinner(squares: bingo) {
+function calculateWinner(squares: Bingo) {
   const lines = [
     // 横のライン
     [0, 1, 2, 3],
