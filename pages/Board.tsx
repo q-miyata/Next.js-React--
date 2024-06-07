@@ -16,6 +16,7 @@ export default function Board({
 }: BoardProps): JSX.Element {
   function handleClick(i: number) {
     if (calculateWinner(squares).winner || squares[i]) {
+      //ここに引き分けの時の分岐も追加
       return;
     }
     const nextSquares = squares.slice();
@@ -32,12 +33,15 @@ export default function Board({
   type WinnerLine = {
     winner: 'X' | 'O' | null;
     line: number[] | null;
+    isDraw: boolean;
   };
-
-  const { winner, line }: WinnerLine = calculateWinner(squares);
+  //引き分けの場合も追加
+  const { winner, line, isDraw }: WinnerLine = calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
+  } else if (isDraw) {
+    status = 'Drawwwwwww';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -115,11 +119,24 @@ function calculateWinner(squares: Bingo) {
     [0, 4, 8],
     [2, 4, 6],
   ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], line: lines[i] };
-    }
+
+  for (const line of lines) {
+    const values = line.map((index) => squares[index]);
+    if (values.includes('O') && values.includes('X'))
+      for (let i = 0; i < lines.length; i++) {
+        const [a, b, c] = lines[i];
+
+        if (
+          squares[a] &&
+          squares[a] === squares[b] &&
+          squares[a] === squares[c]
+        ) {
+          return { winner: squares[a], line: lines[i], isDraw: false };
+        } else if (values) {
+          console.log(values);
+          return { winner: null, line: null, isDraw: true };
+        }
+      }
   }
-  return { winner: null, line: null };
+  return { winner: null, line: null, isDraw: false };
 }
