@@ -1,29 +1,44 @@
-/** @jsxImportSource @emotion/react */
 import { useState } from 'react';
 import { styles } from './_app.styles';
-import { css } from '@emotion/react';
+
 import Board from './Board';
 
-export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
-  const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
+type HistoryObject = {
+  squares: ('X' | 'O' | null)[];
+  index: number | undefined;
+};
 
-  function handlePlay(nextSquares: string[]) {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+export default function Game() {
+  const [history, setHistory] = useState<HistoryObject[]>([
+    { squares: Array(9).fill(null), index: undefined },
+  ]);
+  const [currentMove, setCurrentMove] = useState<number>(0);
+
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove].squares;
+
+  function handlePlay(nextSquares: ('X' | 'O' | null)[], i: number) {
+    const nextHistory = [
+      ...history.slice(0, currentMove + 1),
+      { squares: nextSquares, index: i },
+    ];
+
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
+    console.log(i);
   }
 
   function jumpTo(nextMove: number): void {
     setCurrentMove(nextMove);
   }
 
-  const moves = history.map((squares, move) => {
+  const moves = history.map((step, move) => {
     let description;
+
+    const coordinate = indexToCoordinate(step.index);
+
     if (move > 0) {
-      description = 'Go to move #' + move;
+      description = `Go to move #${move}  ${coordinate}`;
     } else {
       description = 'Go to game start';
     }
@@ -38,7 +53,6 @@ export default function Game() {
 
   return (
     <div css={styles.pageContainer}>
-      {/* 以下、className="game-board"を削除 */}
       <div>
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
@@ -47,4 +61,30 @@ export default function Game() {
       </div>
     </div>
   );
+}
+
+function indexToCoordinate(index: number | undefined): String {
+  let horizontalLine = '';
+  let verticalLine = '';
+  if (index === undefined) {
+    return '';
+  }
+
+  //Determine horizontal line
+  let row = ['1', '2', '3'];
+
+  horizontalLine = row[Math.floor(index / 3)];
+
+  //Determin vertacal line
+  if (index % 3 === 0) {
+    verticalLine = 'A';
+  } else if (index % 3 === 1) {
+    verticalLine = 'B';
+  } else if (index % 3 === 2) {
+    verticalLine = 'C';
+  } else {
+    return '';
+  }
+
+  return verticalLine + horizontalLine;
 }

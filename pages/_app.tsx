@@ -1,9 +1,5 @@
-/** @jsxImportSource @emotion/react */
-//このディレクティブをファイルの先頭に追加することで、そのファイル内で使用されるJSX要素に対して、特定のEmotionの設定を適用することができます。
-import { styles } from './_app.styles';
-import { css } from '@emotion/react';
-import { useState, useEffect } from 'react';
-import ToggleButton from './darkbutton';
+import { useState } from 'react';
+import ToggleButton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
