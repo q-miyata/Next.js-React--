@@ -43,8 +43,12 @@ export const styles = {
     //flex-direction: row; rowにすると横に並ぶ
     display: grid;
     grid-template-rows: 80px;
-    grid-template-columns: 80px 80px 80px; this seems to work right
-   
+    grid-template-columns: 80px 80px 80px;
+  `,
+  yonmokuBoardRow: css`
+    display: grid;
+    grid-template-rows: 80px;
+    grid-template-columns: 80px 80px 80px 80px;
   `,
   game: css``,
   gameInfo: css`
@@ -58,6 +62,18 @@ export const styles = {
     font: italic small-caps bold 16px/2 cursive;
     font-weight: bold;
     font-size: 30px;
+  `,
+  button: css`
+    font: italic small-caps bold 16px/2 cursive;
+    margin: 2px;
+    font-size: 16px;
+    color: white;
+    background-color: black;
+    cursor: default;
+    :hover {
+      background-color: white;
+      color: black;
+    }
   `,
   description: css`
     font: italic small-caps bold 16px/2 cursive;
