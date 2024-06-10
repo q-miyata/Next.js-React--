@@ -115,7 +115,7 @@ function calculateWinner(squares: Bingo) {
     [0, 4, 8],
     [2, 4, 6],
   ];
-
+  //余力があれば set this false by default
   let isDraw = true;
 
   for (let i = 0; i < lines.length; i++) {
@@ -124,7 +124,7 @@ function calculateWinner(squares: Bingo) {
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return { winner: squares[a], line: lines[i], isDraw: false };
     }
-
+    //一つの要素にどっちも含まれているかチェック。これをループ
     const hasX = [squares[a], squares[b], squares[c]].includes('X');
     const hasO = [squares[a], squares[b], squares[c]].includes('O');
 
