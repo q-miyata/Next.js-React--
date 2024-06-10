@@ -14,7 +14,7 @@ export default memo(function Game() {
     { squares: Array(9).fill(null), index: undefined },
   ]);
   const [currentMove, setCurrentMove] = useState<number>(0);
-
+  console.log('Game called');
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
 

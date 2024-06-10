@@ -1,7 +1,7 @@
 import { styles } from './_app.styles';
 import React, { useCallback, useMemo } from 'react';
 import Square from './Square';
-
+import { Timer } from './Timer';
 type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
@@ -31,6 +31,7 @@ export default function Board({
     [squares, xIsNext, onPlay]
   );
 
+  console.log('Board called');
   type WinnerLine = {
     winner: 'X' | 'O' | null;
     line: number[] | null;
@@ -52,6 +53,7 @@ export default function Board({
 
   return (
     <>
+      <Timer></Timer>
       <div css={styles.status}>{status}</div>
       <div css={styles.boardRow}>
         <Square
