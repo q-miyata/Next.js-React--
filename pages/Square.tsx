@@ -1,6 +1,6 @@
 import { styles } from './_app.styles';
-
-export default function Square({
+import { memo } from 'react';
+export default memo(function Square({
   value,
   onSquareClick,
   bingoSquare,
@@ -22,4 +22,4 @@ export default function Square({
       {value}
     </button>
   );
-}
+});

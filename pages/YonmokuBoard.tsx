@@ -1,14 +1,6 @@
-//四目並べ、特に履歴変えなくても問題ないっぽい？
 import { styles } from './_app.styles';
-
+import { BoardProps } from './Board';
 import Square from './Square';
-
-type BoardProps = {
-  xIsNext: boolean;
-  squares: ('X' | 'O' | null)[];
-  //オブジェクトを受け取る
-  onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
-};
 
 export default function YonmokuBoard({
   xIsNext,
@@ -16,7 +8,7 @@ export default function YonmokuBoard({
   onPlay,
 }: BoardProps): JSX.Element {
   function handleClick(i: number) {
-    if (calculateWinner(squares).winner || squares[i]) {
+    if (calculateWinner(squares).winner || squares[i] || isDraw) {
       return;
     }
     const nextSquares = squares.slice();
@@ -29,11 +21,18 @@ export default function YonmokuBoard({
     onPlay(nextSquares, i);
   }
 
-  const { winner, line }: { winner: 'X' | 'O' | null; line: number[] | null } =
-    calculateWinner(squares);
+  type WinnerLine = {
+    winner: 'X' | 'O' | null;
+    line: number[] | null;
+    isDraw: boolean;
+  };
+
+  const { winner, line, isDraw }: WinnerLine = calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
+  } else if (isDraw) {
+    status = 'Drawww';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -137,8 +136,6 @@ export default function YonmokuBoard({
 
 type bingo = ('X' | 'O' | null)[];
 
-// type line = number[] | null;　後で削除する
-
 function calculateWinner(squares: bingo) {
   const lines = [
     // 横のライン
@@ -157,16 +154,27 @@ function calculateWinner(squares: bingo) {
     [0, 5, 10, 15],
     [3, 6, 9, 12],
   ];
+  let isDraw = true;
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c, d] = lines[i];
+
+    const hasO = [squares[a], squares[b], squares[c], squares[d]].includes('O');
+    const hasX = [squares[a], squares[b], squares[c], squares[d]].includes('X');
+
     if (
       squares[a] &&
       squares[a] === squares[b] &&
       squares[a] === squares[c] &&
       squares[a] === squares[d]
     ) {
-      return { winner: squares[a], line: lines[i] };
+      return { winner: squares[a], line: lines[i], isDraw: false };
+    }
+    if (!(hasO && hasX)) {
+      isDraw = false;
     }
   }
-  return { winner: null, line: null };
+  if (isDraw) {
+    return { winner: null, line: null, isDraw: true };
+  }
+  return { winner: null, line: null, isDraw: false };
 }
