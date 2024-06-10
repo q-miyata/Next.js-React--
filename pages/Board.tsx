@@ -13,20 +13,23 @@ export default function Board({
   squares,
   onPlay,
 }: BoardProps): JSX.Element {
-  const handleClick = useCallback((i: number) => {
-    if (calculateWinner(squares).winner || squares[i] || isDraw) {
-      return;
-    }
-    const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = 'X';
-    } else {
-      nextSquares[i] = 'O';
-    }
-    //This just put arguments to handlePlay function
-    onPlay(nextSquares, i);
-    //dependancyの値が変わらない限り新しい関数インスタンスが生成されない
-  }, []);
+  const handleClick = useCallback(
+    (i: number) => {
+      if (calculateWinner(squares).winner || squares[i] || isDraw) {
+        return;
+      }
+      const nextSquares = squares.slice();
+      if (xIsNext) {
+        nextSquares[i] = 'X';
+      } else {
+        nextSquares[i] = 'O';
+      }
+      //This just put arguments to handlePlay function
+      onPlay(nextSquares, i);
+      //dependancyの値が変わらない限り新しい関数インスタンスが生成されない
+    },
+    [squares, onPlay, xIsNext]
+  );
 
   console.log('Board called');
   type WinnerLine = {
