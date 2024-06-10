@@ -2,7 +2,7 @@ import { styles } from './_app.styles';
 import React, { useCallback, useMemo } from 'react';
 import Square from './Square';
 
-type BoardProps = {
+export type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;

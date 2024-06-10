@@ -1,13 +1,6 @@
 import { styles } from './_app.styles';
-
+import { BoardProps } from './Board';
 import Square from './Square';
-
-type BoardProps = {
-  xIsNext: boolean;
-  squares: ('X' | 'O' | null)[];
-
-  onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
-};
 
 export default function YonmokuBoard({
   xIsNext,
