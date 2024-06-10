@@ -1,6 +1,5 @@
-/** @jsxImportSource @emotion/react */
 import { styles } from './_app.styles';
-
+import React, { useCallback } from 'react';
 import Square from './Square';
 
 type BoardProps = {
@@ -15,8 +14,7 @@ export default function Board({
   onPlay,
 }: BoardProps): JSX.Element {
   function handleClick(i: number) {
-    if (calculateWinner(squares).winner || squares[i]) {
-      //ここに引き分けの時の分岐も追加
+    if (calculateWinner(squares).winner || squares[i] || isDraw) {
       return;
     }
     const nextSquares = squares.slice();
@@ -25,9 +23,8 @@ export default function Board({
     } else {
       nextSquares[i] = 'O';
     }
-
+    //This just put arguments to handlePlay function
     onPlay(nextSquares, i);
-    console.log(nextSquares);
   }
 
   type WinnerLine = {
@@ -35,13 +32,13 @@ export default function Board({
     line: number[] | null;
     isDraw: boolean;
   };
-  //引き分けの場合も追加
+
   const { winner, line, isDraw }: WinnerLine = calculateWinner(squares);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
   } else if (isDraw) {
-    status = 'Drawwwwwww';
+    status = 'Draw';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
@@ -49,7 +46,6 @@ export default function Board({
   return (
     <>
       <div css={styles.status}>{status}</div>
-
       <div css={styles.boardRow}>
         <Square
           value={squares[0]}
@@ -120,23 +116,26 @@ function calculateWinner(squares: Bingo) {
     [2, 4, 6],
   ];
 
-  for (const line of lines) {
-    const values = line.map((index) => squares[index]);
-    if (values.includes('O') && values.includes('X'))
-      for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
+  let isDraw = true;
 
-        if (
-          squares[a] &&
-          squares[a] === squares[b] &&
-          squares[a] === squares[c]
-        ) {
-          return { winner: squares[a], line: lines[i], isDraw: false };
-        } else if (values) {
-          console.log(values);
-          return { winner: null, line: null, isDraw: true };
-        }
-      }
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    console.log([squares[a], squares[b], squares[c]]);
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return { winner: squares[a], line: lines[i], isDraw: false };
+    }
+
+    const hasX = [squares[a], squares[b], squares[c]].includes('X');
+    const hasO = [squares[a], squares[b], squares[c]].includes('O');
+
+    if (!(hasX && hasO)) {
+      isDraw = false;
+    }
   }
+
+  if (isDraw) {
+    return { winner: null, line: null, isDraw: true };
+  }
+
   return { winner: null, line: null, isDraw: false };
 }
