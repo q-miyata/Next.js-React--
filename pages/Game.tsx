@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { styles } from './_app.styles';
 
 import Board from './Board';
@@ -9,7 +9,7 @@ type HistoryObject = {
   index: number | undefined;
 };
 
-export default function Game() {
+export default memo(function Game() {
   const [history, setHistory] = useState<HistoryObject[]>([
     { squares: Array(9).fill(null), index: undefined },
   ]);
@@ -99,7 +99,7 @@ export default function Game() {
       </div>
     </div>
   );
-}
+});
 
 //index refers to step.index in Board function
 //size refers to boardSize in Board function
