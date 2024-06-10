@@ -1,7 +1,36 @@
 import { styles } from './_app.styles';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo,useState,useEffect } from 'react';
 import Square from './Square';
-import { Timer } from './Timer';
+
+//I'm gonna make a timer in this component
+export const Timer  = () => {
+  const [countTime, setCountTime] = useState<number>(180)
+  countDown (countTime, setCountTime);
+
+    return (
+      <p>ゲーム残り時間: {Math.floor(countTime / 60)}分{countTime % 60}秒 </p>
+    )
+}
+
+//A function for the timer
+const countDown =(
+seconds: number | null,
+setCountTime: (arg0:number) => void,
+)=>{
+  useEffect(()=>{
+    //後で関数名変えたい
+    const jackSmith = setInterval(() => {
+      if (seconds === 0){
+        clearInterval(jackSmith)
+      }
+      if ()
+    })
+  })
+}
+
+
+
+
 type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
@@ -53,7 +82,6 @@ export default function Board({
 
   return (
     <>
-      <Timer></Timer>
       <div css={styles.status}>{status}</div>
       <div css={styles.boardRow}>
         <Square
