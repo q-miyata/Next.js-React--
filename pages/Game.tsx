@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { useState, memo, useEffect } from 'react';
 import { styles } from './_app.styles';
 
 import Board from './Board';

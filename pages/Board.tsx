@@ -1,35 +1,40 @@
 import { styles } from './_app.styles';
-import React, { useCallback, useMemo,useState,useEffect } from 'react';
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 import Square from './Square';
 
-//I'm gonna make a timer in this component
-export const Timer  = () => {
-  const [countTime, setCountTime] = useState<number>(180)
-  countDown (countTime, setCountTime);
+export const Timer = () => {
+  const [countTime, setCountTime] = useState<number>(10);
+  useCountDownInterval(countTime, setCountTime);
 
-    return (
-      <p>ゲーム残り時間: {Math.floor(countTime / 60)}分{countTime % 60}秒 </p>
-    )
-}
+  return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
+};
 
-//A function for the timer
-const countDown =(
-seconds: number | null,
-setCountTime: (arg0:number) => void,
-)=>{
-  useEffect(()=>{
-    //後で関数名変えたい
-    const jackSmith = setInterval(() => {
-      if (seconds === 0){
-        clearInterval(jackSmith)
+const useCountDownInterval = (
+  countTime: number | null,
+  setCountTime: (arg0: number) => void
+) => {
+  useEffect(() => {
+    const countDownInterval = setInterval(() => {
+      if (countTime === 0) {
+        clearInterval(countDownInterval);
+        //when time runs out, i want to set winner xIsNext;
+        winner = xIsNext;
       }
-      if ()
-    })
-  })
-}
-
-
-
+      if (countTime && countTime > 0) {
+        setCountTime(countTime - 1);
+      }
+    }, 1000);
+    return () => {
+      clearInterval(countDownInterval);
+    };
+  }, [countTime]);
+};
 
 type BoardProps = {
   xIsNext: boolean;
@@ -42,6 +47,16 @@ export default function Board({
   squares,
   onPlay,
 }: BoardProps): JSX.Element {
+  //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
+
+  useEffect(() => {
+    const playerSwitched = () => {
+      console.log('Player changed!');
+      //when player change, i want the timer starts counting down again
+    };
+    playerSwitched();
+  }, [xIsNext]);
+
   const handleClick = useCallback(
     (i: number) => {
       if (calculateWinner(squares).winner || squares[i] || isDraw) {
@@ -82,6 +97,7 @@ export default function Board({
 
   return (
     <>
+      <Timer />
       <div css={styles.status}>{status}</div>
       <div css={styles.boardRow}>
         <Square
