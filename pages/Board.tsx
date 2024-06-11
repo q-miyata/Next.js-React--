@@ -10,37 +10,43 @@ import Square from './Square';
 
 const useCountDownInterval = (
   countTime: number | null,
-  //関数型の引数
+  //関数型の引数  返り値もここで定義？
+  //useState の状態更新関数を受け取っている
   setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
   setWinner: (winner: 'X' | 'O' | null) => void,
   xIsNext: boolean
 ) => {
+  //setIntervalの型定義はこれになる
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (countTime === null) return;
-
+    //intervalRef.currentが存在していたら消す
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
     intervalRef.current = setInterval(() => {
+      //1秒ごとにsetCountTime()を実行
       setCountTime((prevCountTime: number) => {
         if (prevCountTime === 0) {
+          // 型アサーションを使用することで、TypeScriptコンパイラに対してintervalRef.currentの型がsetIntervalの戻り値の型であることを保証し、clearIntervalが適切に動作することを示しています
           clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
           setWinner(xIsNext ? 'O' : 'X');
           return prevCountTime;
         }
         return prevCountTime - 1;
       });
+      //1秒後は1000
     }, 1000);
 
     return () => {
       clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
     };
+    //依存配列のどれかが変わったら関数がrunする
   }, [countTime, setCountTime, setWinner, xIsNext]);
 };
-
+//countTimeはプロパティで、プロパティの型指定をしている
 export const Timer = ({ countTime }: { countTime: number }) => {
   return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
 };
@@ -56,6 +62,7 @@ export default function Board({
   squares,
   onPlay,
 }: BoardProps): JSX.Element {
+  //親コンポーネントでstate管理
   const [countTime, setCountTime] = useState<number>(5);
   const [winner, setWinner] = useState<'X' | 'O' | null>(null);
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
@@ -80,6 +87,7 @@ export default function Board({
       onPlay(nextSquares, i);
       //dependancyの値が変わらない限り新しい関数インスタンスが生成されない
     },
+
     [squares, xIsNext, onPlay, winner]
   );
 
@@ -95,7 +103,7 @@ export default function Board({
     isDraw,
   }: WinnerLine = useMemo(() => calculateWinner(squares), [squares]);
 
-  //挿入
+  //挿入　もし勝者が配列によって決まったならそっちを出す（すぐに実行しないで、依存値が変わるまで待つ）
   useEffect(() => {
     if (calcWinner) {
       setWinner(calcWinner);
