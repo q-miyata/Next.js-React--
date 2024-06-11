@@ -8,6 +8,23 @@ import React, {
 } from 'react';
 import Square from './Square';
 
+//別ファイルにわけたいけどstateつかってるからまだ無理
+
+export const TouryouButton = (
+  setWinner: (winner: 'X' | 'O' | null) => void,
+  xIsNext: boolean
+) => {
+  function iAmTheLooser() {
+    if (xIsNext) {
+      setWinner: 'X';
+    } else {
+      setWinner: 'O';
+    }
+  }
+
+  return <button onClick={iAmTheLooser}>降参します</button>;
+};
+
 const useCountDownInterval = (
   countTime: number | null,
   //関数型の引数
@@ -64,6 +81,8 @@ export default function Board({
   }, [xIsNext]);
   //useStateをparameterに渡すことでuseEffectをrunする
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
+  //投了ボタンの関数にuseState渡したい
+  TouryouButton(setWinner, xIsNext);
 
   const handleClick = useCallback(
     (i: number) => {
@@ -115,6 +134,7 @@ export default function Board({
     <>
       <Timer countTime={countTime} />
       <div css={styles.status}>{status}</div>
+      <TouryouButton />
       <div css={styles.boardRow}>
         <Square
           value={squares[0]}
