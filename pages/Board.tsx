@@ -8,32 +8,40 @@ import React, {
 } from 'react';
 import Square from './Square';
 
-export const Timer = () => {
-  const [countTime, setCountTime] = useState<number>(10);
-  useCountDownInterval(countTime, setCountTime);
-
-  return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
-};
-
 const useCountDownInterval = (
   countTime: number | null,
-  setCountTime: (arg0: number) => void
+  setCountTime: (arg0: number) => void,
+  setWinner: (winner: 'X' | 'O' | null) => void,
+  xIsNext: boolean
 ) => {
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   useEffect(() => {
-    const countDownInterval = setInterval(() => {
-      if (countTime === 0) {
-        clearInterval(countDownInterval);
-        //when time runs out, i want to set winner xIsNext;
-        winner = xIsNext;
-      }
-      if (countTime && countTime > 0) {
-        setCountTime(countTime - 1);
-      }
+    if (countTime === null) return;
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      setCountTime((prevCountTime) => {
+        if (prevCountTime === 0) {
+          clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
+          setWinner(xIsNext ? 'X' : 'O');
+          return prevCountTime;
+        }
+        return prevCountTime - 1;
+      });
     }, 1000);
+
     return () => {
-      clearInterval(countDownInterval);
+      clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
     };
-  }, [countTime]);
+  }, [countTime, setCountTime, setWinner, xIsNext]);
+};
+
+export const Timer = ({ countTime }: { countTime: number }) => {
+  return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
 };
 
 type BoardProps = {
@@ -47,19 +55,18 @@ export default function Board({
   squares,
   onPlay,
 }: BoardProps): JSX.Element {
+  const [countTime, setCountTime] = useState<number>(10);
+  const [winner, setWinner] = useState<'X' | 'O' | null>(null);
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
-
   useEffect(() => {
-    const playerSwitched = () => {
-      console.log('Player changed!');
-      //when player change, i want the timer starts counting down again
-    };
-    playerSwitched();
+    setCountTime(10);
   }, [xIsNext]);
+  //useStateをparameterに渡すことでuseEffectをrunする
+  useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
 
   const handleClick = useCallback(
     (i: number) => {
-      if (calculateWinner(squares).winner || squares[i] || isDraw) {
+      if (winner || squares[i] || isDraw) {
         return;
       }
       const nextSquares = squares.slice();
@@ -72,20 +79,28 @@ export default function Board({
       onPlay(nextSquares, i);
       //dependancyの値が変わらない限り新しい関数インスタンスが生成されない
     },
-    [squares, xIsNext, onPlay]
+    [squares, xIsNext, onPlay, winner]
   );
 
-  console.log('Board called');
   type WinnerLine = {
     winner: 'X' | 'O' | null;
     line: number[] | null;
     isDraw: boolean;
   };
 
-  const { winner, line, isDraw }: WinnerLine = useMemo(
-    () => calculateWinner(squares),
-    [squares]
-  );
+  const {
+    winner: calcWinner,
+    line,
+    isDraw,
+  }: WinnerLine = useMemo(() => calculateWinner(squares), [squares]);
+
+  //挿入
+  useEffect(() => {
+    if (calcWinner) {
+      setWinner(calcWinner);
+    }
+  }, [calcWinner]);
+
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
@@ -97,7 +112,7 @@ export default function Board({
 
   return (
     <>
-      <Timer />
+      <Timer countTime={countTime} />
       <div css={styles.status}>{status}</div>
       <div css={styles.boardRow}>
         <Square
