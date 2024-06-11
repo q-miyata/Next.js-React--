@@ -1,6 +1,52 @@
 import { styles } from './_app.styles';
-
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 import Square from './Square';
+
+const useCountDownInterval = (
+  countTime: number | null,
+  //関数型の引数
+  setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
+  setWinner: (winner: 'X' | 'O' | null) => void,
+  xIsNext: boolean
+) => {
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    //インターバルをまだスタートさせないため
+    if (countTime === null) return;
+    //以前に設定したインターバルがあるなら消去する
+    if (intervalRef.current) {
+      //プロパティに格納されているため
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      setCountTime((prevCountTime: number) => {
+        if (prevCountTime === 0) {
+          clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
+          //次のプレーヤーにするためXとOの順番入れ替えた。
+          setWinner(xIsNext ? 'O' : 'X');
+          return prevCountTime;
+        }
+        return prevCountTime - 1;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
+    };
+  }, [countTime, setCountTime, setWinner, xIsNext]);
+};
+
+export const Timer = ({ countTime }: { countTime: number }) => {
+  return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
+};
 
 type YonmokuProps = {
   xIsNext: boolean;
@@ -14,19 +60,31 @@ export default function YonmokuBoard({
   squares,
   onPlay,
 }: YonmokuProps): JSX.Element {
-  function handleClick(i: number) {
-    if (calculateWinner(squares).winner || squares[i] || isDraw) {
-      return;
-    }
-    const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = 'X';
-    } else {
-      nextSquares[i] = 'O';
-    }
+  const [countTime, setCountTime] = useState<number>(2);
+  const [winner, setWinner] = useState<'X' | 'O' | null>(null);
+  //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
+  useEffect(() => {
+    setCountTime(2);
+  }, [xIsNext]);
+  //useStateをparameterに渡すことでuseEffectをrunする
+  useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
 
-    onPlay(nextSquares, i);
-  }
+  const handleClick = useCallback(
+    (i: number) => {
+      if (calculateWinner(squares).winner || squares[i] || isDraw) {
+        return;
+      }
+      const nextSquares = squares.slice();
+      if (xIsNext) {
+        nextSquares[i] = 'X';
+      } else {
+        nextSquares[i] = 'O';
+      }
+
+      onPlay(nextSquares, i);
+    },
+    [squares, xIsNext, onPlay, winner]
+  );
 
   type WinnerLine = {
     winner: 'X' | 'O' | null;
@@ -34,7 +92,18 @@ export default function YonmokuBoard({
     isDraw: boolean;
   };
 
-  const { winner, line, isDraw }: WinnerLine = calculateWinner(squares);
+  const {
+    winner: calcWinner,
+    line,
+    isDraw,
+  }: WinnerLine = calculateWinner(squares);
+
+  //挿入
+  useEffect(() => {
+    if (calcWinner) {
+      setWinner(calcWinner);
+    }
+  }, [calcWinner]);
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
@@ -46,6 +115,7 @@ export default function YonmokuBoard({
 
   return (
     <>
+      <Timer countTime={countTime} />
       <div css={styles.status}>{status}</div>
 
       <div css={styles.yonmokuBoardRow}>

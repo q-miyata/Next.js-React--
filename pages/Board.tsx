@@ -10,7 +10,8 @@ import Square from './Square';
 
 const useCountDownInterval = (
   countTime: number | null,
-  setCountTime: (arg0: number) => void,
+  //関数型の引数
+  setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
   setWinner: (winner: 'X' | 'O' | null) => void,
   xIsNext: boolean
 ) => {
@@ -24,10 +25,10 @@ const useCountDownInterval = (
     }
 
     intervalRef.current = setInterval(() => {
-      setCountTime((prevCountTime) => {
+      setCountTime((prevCountTime: number) => {
         if (prevCountTime === 0) {
           clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
-          setWinner(xIsNext ? 'X' : 'O');
+          setWinner(xIsNext ? 'O' : 'X');
           return prevCountTime;
         }
         return prevCountTime - 1;
@@ -55,11 +56,11 @@ export default function Board({
   squares,
   onPlay,
 }: BoardProps): JSX.Element {
-  const [countTime, setCountTime] = useState<number>(10);
+  const [countTime, setCountTime] = useState<number>(2);
   const [winner, setWinner] = useState<'X' | 'O' | null>(null);
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
   useEffect(() => {
-    setCountTime(10);
+    setCountTime(2);
   }, [xIsNext]);
   //useStateをparameterに渡すことでuseEffectをrunする
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
