@@ -56,11 +56,11 @@ export default function Board({
   squares,
   onPlay,
 }: BoardProps): JSX.Element {
-  const [countTime, setCountTime] = useState<number>(2);
+  const [countTime, setCountTime] = useState<number>(5);
   const [winner, setWinner] = useState<'X' | 'O' | null>(null);
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
   useEffect(() => {
-    setCountTime(2);
+    setCountTime(5);
   }, [xIsNext]);
   //useStateをparameterに渡すことでuseEffectをrunする
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
