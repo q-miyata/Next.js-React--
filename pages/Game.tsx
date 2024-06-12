@@ -10,6 +10,7 @@ type HistoryObject = {
 };
 
 export default memo(function Game() {
+  const [winner, setWinner] = useState<'O' | 'X' | null>(null);
   const [history, setHistory] = useState<HistoryObject[]>([
     { squares: Array(9).fill(null), index: undefined },
   ]);
@@ -35,6 +36,7 @@ export default memo(function Game() {
   }
 
   function jumpTo(nextMove: number): void {
+    setWinner(null);
     setCurrentMove(nextMove);
   }
 
@@ -84,12 +86,16 @@ export default memo(function Game() {
               xIsNext={xIsNext}
               squares={currentSquares}
               onPlay={handlePlay}
+              winner={winner}
+              setWinner={setWinner}
             />
           ) : (
             <YonmokuBoard
               xIsNext={xIsNext}
               squares={currentSquares}
               onPlay={handlePlay}
+              winner={winner}
+              setWinner={setWinner}
             />
           )}
         </div>

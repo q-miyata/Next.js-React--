@@ -15,6 +15,7 @@ const useCountDownInterval = (
   setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
   setWinner: (winner: 'X' | 'O' | null) => void,
   xIsNext: boolean
+  //isDraw: boolean
 ) => {
   //setIntervalの型定義はこれになる
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -22,6 +23,7 @@ const useCountDownInterval = (
   useEffect(() => {
     if (countTime === null) return;
     //intervalRef.currentが存在していたら消す
+    // if (isDraw) return;
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -32,7 +34,9 @@ const useCountDownInterval = (
         if (prevCountTime === 0) {
           // 型アサーションを使用することで、TypeScriptコンパイラに対してintervalRef.currentの型がsetIntervalの戻り値の型であることを保証し、clearIntervalが適切に動作することを示しています
           clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
+
           setWinner(xIsNext ? 'O' : 'X');
+
           return prevCountTime;
         }
         return prevCountTime - 1;
@@ -51,21 +55,26 @@ export const Timer = ({ countTime }: { countTime: number }) => {
   return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
 };
 
-type BoardProps = {
+export type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
+  setWinner: (winner: 'X' | 'O' | null) => void;
+  winner: 'X' | 'O' | null;
 };
 
 export default function Board({
   xIsNext,
   squares,
   onPlay,
+  setWinner,
+  winner,
 }: BoardProps): JSX.Element {
   //親コンポーネントでstate管理
   const [countTime, setCountTime] = useState<number>(5);
-  const [winner, setWinner] = useState<'X' | 'O' | null>(null);
-  //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
+  //親コンポーネントに移動させた
+  //const [winner, setWinner] = useState<'X' | 'O' | null>(null);
+
   useEffect(() => {
     setCountTime(5);
   }, [xIsNext]);
@@ -183,6 +192,7 @@ type Bingo = ('X' | 'O' | null)[];
 
 function calculateWinner(squares: Bingo) {
   const lines = [
+    //map を使う
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -208,9 +218,8 @@ function calculateWinner(squares: Bingo) {
       isDraw = false;
     }
   }
-
   if (isDraw) {
-    return { winner: null, line: null, isDraw: true };
+    return { winner: null, line: null, isDraw: isDraw };
   }
 
   return { winner: null, line: null, isDraw: false };

@@ -7,10 +7,11 @@ import React, {
   useRef,
 } from 'react';
 import Square from './Square';
-
+import { BoardProps } from './Board';
 const useCountDownInterval = (
   countTime: number | null,
-  //関数型の引数
+  //関数型の引数  返り値もここで定義？
+  //useState の状態更新関数を受け取っている
   setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
   setWinner: (winner: 'X' | 'O' | null) => void,
   xIsNext: boolean
@@ -27,8 +28,10 @@ const useCountDownInterval = (
     }
 
     intervalRef.current = setInterval(() => {
+      //1秒ごとにsetCountTime()を実行
       setCountTime((prevCountTime: number) => {
         if (prevCountTime === 0) {
+          // 型アサーションを使用することで、TypeScriptコンパイラに対してintervalRef.currentの型がsetIntervalの戻り値の型であることを保証し、clearIntervalが適切に動作することを示しています
           clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
           //次のプレーヤーにするためXとOの順番入れ替えた。
           setWinner(xIsNext ? 'O' : 'X');
@@ -43,25 +46,27 @@ const useCountDownInterval = (
     };
   }, [countTime, setCountTime, setWinner, xIsNext]);
 };
-
+//countTimeはプロパティで、プロパティの型指定をしている
 export const Timer = ({ countTime }: { countTime: number }) => {
   return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
 };
 
-type YonmokuProps = {
-  xIsNext: boolean;
-  squares: ('X' | 'O' | null)[];
+// type YonmokuProps = {
+//   xIsNext: boolean;
+//   squares: ('X' | 'O' | null)[];
 
-  onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
-};
+//   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
+// };
 
 export default function YonmokuBoard({
   xIsNext,
   squares,
   onPlay,
-}: YonmokuProps): JSX.Element {
+  setWinner,
+  winner,
+}: BoardProps): JSX.Element {
   const [countTime, setCountTime] = useState<number>(5);
-  const [winner, setWinner] = useState<'X' | 'O' | null>(null);
+
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
   useEffect(() => {
     setCountTime(5);
