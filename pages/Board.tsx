@@ -191,17 +191,32 @@ export default function Board({
 type Bingo = ('X' | 'O' | null)[];
 
 function calculateWinner(squares: Bingo) {
-  const lines = [
-    //map を使う
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
+  const findWinningLines = (squares: Bingo) => {
+    const size = Math.sqrt(squares.length);
+    const range = [...Array(size).keys()];
+
+    const rows = range.map((i) => range.map((j) => i * size + j));
+    const columns = range.map((i) => range.map((j) => j * size + i));
+    const taikakusen = [
+      range.map((i) => i * size + i),
+      range.map((i) => (i + 1) * size - (i + 1)),
+    ];
+
+    return [...rows, ...columns, ...taikakusen];
+  };
+  let lines = findWinningLines(squares);
+  // const lines = [
+  //   //map を使う
+  //   [0, 1, 2],
+  //   [3, 4, 5],
+  //   [6, 7, 8],
+
+  //   [0, 3, 6],
+  //   [1, 4, 7],
+  //   [2, 5, 8],
+  //   [0, 4, 8],
+  //   [2, 4, 6],
+  // ];
 
   let isDraw = true;
 
