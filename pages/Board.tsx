@@ -7,12 +7,13 @@ import React, {
   useRef,
 } from 'react';
 import Square from './Square';
+import TouryouButton from './TouryouButton';
 
 const useCountDownInterval = (
   countTime: number | null,
   //関数型の引数  返り値もここで定義？
   //useState の状態更新関数を受け取っている
-  setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
+  setCountTime: (value: number | ((prevCountTime: number) => number)) => void,
   setWinner: (winner: 'X' | 'O' | null) => void,
   xIsNext: boolean
 ) => {
@@ -123,6 +124,11 @@ export default function Board({
     <>
       <Timer countTime={countTime} />
       <div css={styles.status}>{status}</div>
+      <TouryouButton
+        setWinner={setWinner}
+        xIsNext={xIsNext}
+        setCountTime={setCountTime}
+      />
       <div css={styles.boardRow}>
         <Square
           value={squares[0]}

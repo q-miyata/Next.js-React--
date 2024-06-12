@@ -7,18 +7,19 @@ import React, {
   useRef,
 } from 'react';
 import Square from './Square';
-
+import TouryouButton from './TouryouButton';
 const useCountDownInterval = (
   countTime: number | null,
-  //関数型の引数
-  setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
+  //関数型の引数  返り値もここで定義？
+  //useState の状態更新関数を受け取っている
+  setCountTime: (value: number | ((prevCountTime: number) => number)) => void,
   setWinner: (winner: 'X' | 'O' | null) => void,
   xIsNext: boolean
 ) => {
+  //setIntervalの型定義はこれになる
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    //インターバルをまだスタートさせないため
     if (countTime === null) return;
     //以前に設定したインターバルがあるなら消去する
     if (intervalRef.current) {
@@ -27,8 +28,10 @@ const useCountDownInterval = (
     }
 
     intervalRef.current = setInterval(() => {
+      //1秒ごとにsetCountTime()を実行
       setCountTime((prevCountTime: number) => {
         if (prevCountTime === 0) {
+          // 型アサーションを使用することで、TypeScriptコンパイラに対してintervalRef.currentの型がsetIntervalの戻り値の型であることを保証し、clearIntervalが適切に動作することを示しています
           clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
           //次のプレーヤーにするためXとOの順番入れ替えた。
           setWinner(xIsNext ? 'O' : 'X');
@@ -36,14 +39,16 @@ const useCountDownInterval = (
         }
         return prevCountTime - 1;
       });
+      //1秒後は1000
     }, 1000);
 
     return () => {
       clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
     };
+    //依存配列のどれかが変わったら関数がrunする
   }, [countTime, setCountTime, setWinner, xIsNext]);
 };
-
+//countTimeはプロパティで、プロパティの型指定をしている
 export const Timer = ({ countTime }: { countTime: number }) => {
   return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
 };
@@ -98,7 +103,7 @@ export default function YonmokuBoard({
     isDraw,
   }: WinnerLine = calculateWinner(squares);
 
-  //挿入
+  //挿入　もし勝者が配列によって決まったならそっちを出す（すぐに実行しないで、依存値が変わるまで待つ）
   useEffect(() => {
     if (calcWinner) {
       setWinner(calcWinner);
@@ -117,7 +122,11 @@ export default function YonmokuBoard({
     <>
       <Timer countTime={countTime} />
       <div css={styles.status}>{status}</div>
-
+      <TouryouButton
+        setWinner={setWinner}
+        xIsNext={xIsNext}
+        setCountTime={setCountTime}
+      />
       <div css={styles.yonmokuBoardRow}>
         <Square
           value={squares[0]}
