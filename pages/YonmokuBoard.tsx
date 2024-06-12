@@ -1,19 +1,12 @@
 import { styles } from './_app.styles';
-
+import { BoardProps } from './Board';
 import Square from './Square';
-
-type YonmokuProps = {
-  xIsNext: boolean;
-  squares: ('X' | 'O' | null)[];
-
-  onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
-};
 
 export default function YonmokuBoard({
   xIsNext,
   squares,
   onPlay,
-}: YonmokuProps): JSX.Element {
+}: BoardProps): JSX.Element {
   function handleClick(i: number) {
     if (calculateWinner(squares).winner || squares[i] || isDraw) {
       return;

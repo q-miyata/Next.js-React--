@@ -1,4 +1,5 @@
 import { styles } from './_app.styles';
+
 import React, {
   useCallback,
   useMemo,
@@ -44,7 +45,7 @@ export const Timer = ({ countTime }: { countTime: number }) => {
   return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
 };
 
-type BoardProps = {
+export type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
@@ -79,9 +80,11 @@ export default function Board({
       onPlay(nextSquares, i);
       //dependancyの値が変わらない限り新しい関数インスタンスが生成されない
     },
+
     [squares, xIsNext, onPlay, winner]
   );
 
+  console.log('Board called');
   type WinnerLine = {
     winner: 'X' | 'O' | null;
     line: number[] | null;
@@ -191,7 +194,7 @@ function calculateWinner(squares: Bingo) {
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return { winner: squares[a], line: lines[i], isDraw: false };
     }
-
+    console.log([squares[a], squares[b], squares[c]]);
     const hasX = [squares[a], squares[b], squares[c]].includes('X');
     const hasO = [squares[a], squares[b], squares[c]].includes('O');
 
