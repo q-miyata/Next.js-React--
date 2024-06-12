@@ -193,6 +193,7 @@ type Bingo = ('X' | 'O' | null)[];
 function calculateWinner(squares: Bingo) {
   const findWinningLines = (squares: Bingo) => {
     const size = Math.sqrt(squares.length);
+    //Array.prototype.keys()メソッド
     const range = [...Array(size).keys()];
 
     const rows = range.map((i) => range.map((j) => i * size + j));
