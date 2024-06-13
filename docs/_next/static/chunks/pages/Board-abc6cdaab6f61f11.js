@@ -1,0 +1,1 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[118],{6602:function(n,_,u){(window.__NEXT_P=window.__NEXT_P||[]).push(["/Board",function(){return u(8877)}])}},function(n){n.O(0,[888,774,179],function(){return n(n.s=6602)}),_N_E=n.O()}]);
