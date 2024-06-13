@@ -9,7 +9,6 @@ export default memo(function Square({
   onSquareClick: () => void;
   bingoSquare: boolean;
 }) {
-  console.log('Square called');
   const squareStyle = [styles.square];
 
   if (!value) {

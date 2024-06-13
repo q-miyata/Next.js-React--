@@ -11,13 +11,14 @@ type HistoryObject = {
 
 export default memo(function Game() {
   const [winner, setWinner] = useState<'O' | 'X' | null>(null);
-  const [history, setHistory] = useState<HistoryObject[]>([
-    { squares: Array(9).fill(null), index: undefined },
-  ]);
-  const [currentMove, setCurrentMove] = useState<number>(0);
-  console.log('Game called');
-  const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove].squares;
+
+  // const [history, setHistory] = useState<HistoryObject[]>([
+  //   { squares: Array(9).fill(null), index: undefined },
+  // ]);
+  // const [currentMove, setCurrentMove] = useState<number>(0);
+
+  // const xIsNext = currentMove % 2 === 0;
+  // const currentSquares = history[currentMove].squares;
 
   //ボード選択
   const [boardSize, setBoardSize] = useState<number | null>(null);
@@ -25,6 +26,17 @@ export default memo(function Game() {
     setBoardSize(size);
   };
 
+  const [history, setHistory] = useState<HistoryObject[]>([
+    {
+      //boardSize がnull だった場合　0を返す
+      squares: Array(Math.pow(boardSize || 0, 2)).fill(null),
+      index: undefined,
+    },
+  ]);
+  const [currentMove, setCurrentMove] = useState<number>(0);
+
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove].squares;
   function handlePlay(nextSquares: ('X' | 'O' | null)[], i: number) {
     const nextHistory = [
       ...history.slice(0, currentMove + 1),
@@ -88,6 +100,7 @@ export default memo(function Game() {
               onPlay={handlePlay}
               winner={winner}
               setWinner={setWinner}
+              size={boardSize}
             />
           ) : (
             <YonmokuBoard
@@ -96,6 +109,7 @@ export default memo(function Game() {
               onPlay={handlePlay}
               winner={winner}
               setWinner={setWinner}
+              size={boardSize}
             />
           )}
         </div>

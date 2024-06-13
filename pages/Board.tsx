@@ -61,6 +61,7 @@ export type BoardProps = {
   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
   setWinner: (winner: 'X' | 'O' | null) => void;
   winner: 'X' | 'O' | null;
+  size: number;
 };
 
 export default function Board({
@@ -69,6 +70,7 @@ export default function Board({
   onPlay,
   setWinner,
   winner,
+  size,
 }: BoardProps): JSX.Element {
   //親コンポーネントでstate管理
   const [countTime, setCountTime] = useState<number>(5);
@@ -110,7 +112,7 @@ export default function Board({
     winner: calcWinner,
     line,
     isDraw,
-  }: WinnerLine = useMemo(() => calculateWinner(squares), [squares]);
+  }: WinnerLine = useMemo(() => calculateWinner(squares, size), [squares]);
 
   //挿入　もし勝者が配列によって決まったならそっちを出す（すぐに実行しないで、依存値が変わるまで待つ）
   useEffect(() => {
@@ -190,34 +192,26 @@ export default function Board({
 
 type Bingo = ('X' | 'O' | null)[];
 
-function calculateWinner(squares: Bingo) {
+function calculateWinner(squares: Bingo, size: number) {
   const findWinningLines = (squares: Bingo) => {
-    const size = Math.sqrt(squares.length);
-    //Array.prototype.keys()メソッド
+    // const size =;
+    console.log('Sanmoku size is' + size);
+    //Array.prototype.keys()メソッド マスの並びのインデックス　rangeの中身は[0,1,2]
     const range = [...Array(size).keys()];
-
+    //ネストしたmap iは行jは列　よって　0*3+0, 0*3+1 0*3+2 で[0,1,2] 内側のmapはincrement j
     const rows = range.map((i) => range.map((j) => i * size + j));
+    // 0*3+0,1*3+0,2*3+0 で[0,3,6]
     const columns = range.map((i) => range.map((j) => j * size + i));
     const taikakusen = [
       range.map((i) => i * size + i),
+
       range.map((i) => (i + 1) * size - (i + 1)),
     ];
 
+    //展開して入れる
     return [...rows, ...columns, ...taikakusen];
   };
   let lines = findWinningLines(squares);
-  // const lines = [
-  //   //map を使う
-  //   [0, 1, 2],
-  //   [3, 4, 5],
-  //   [6, 7, 8],
-
-  //   [0, 3, 6],
-  //   [1, 4, 7],
-  //   [2, 5, 8],
-  //   [0, 4, 8],
-  //   [2, 4, 6],
-  // ];
 
   let isDraw = true;
 
@@ -235,7 +229,7 @@ function calculateWinner(squares: Bingo) {
     }
   }
   if (isDraw) {
-    return { winner: null, line: null, isDraw: isDraw };
+    return { winner: null, line: null, isDraw: true };
   }
 
   return { winner: null, line: null, isDraw: false };

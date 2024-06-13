@@ -64,6 +64,7 @@ export default function YonmokuBoard({
   onPlay,
   setWinner,
   winner,
+  size,
 }: BoardProps): JSX.Element {
   const [countTime, setCountTime] = useState<number>(5);
 
@@ -101,7 +102,7 @@ export default function YonmokuBoard({
     winner: calcWinner,
     line,
     isDraw,
-  }: WinnerLine = calculateWinner(squares);
+  }: WinnerLine = calculateWinner(squares, size);
 
   //挿入
   useEffect(() => {
@@ -218,30 +219,24 @@ export default function YonmokuBoard({
 
 type Bingo = ('X' | 'O' | null)[];
 
-function calculateWinner(squares: Bingo) {
- function findWinningLines=(squares:Bingo)=>{
-  const size = Math.sqrt(squares.length);
-  const range = [...Array(size).keys()];
+function calculateWinner(squares: Bingo, size: number) {
+  const findWinningLines = (squares: Bingo) => {
+    //const size = Math.sqrt(squares.length);
 
-  const rows = range.map((i) => ) 
- }
-  // const lines = [
-  //   // 横のライン
-  //   [0, 1, 2, 3],
-  //   [4, 5, 6, 7],
-  //   [8, 9, 10, 11],
-  //   [12, 13, 14, 15],
+    console.log('Yonmoku size is' + size);
+    const range = [...Array(size).keys()];
 
-  //   // 縦のライン
-  //   [0, 4, 8, 12],
-  //   [1, 5, 9, 13],
-  //   [2, 6, 10, 14],
-  //   [3, 7, 11, 15],
+    const rows = range.map((i) => range.map((j) => i * size + j));
+    const columns = range.map((i) => range.map((j) => j * size + i));
+    const taikakusen = [
+      range.map((i) => i * size + i),
+      range.map((i) => (i + 1) * size - (i + 1)),
+    ];
+    return [...rows, ...columns, ...taikakusen];
+  };
 
-  //   // 斜めのライン
-  //   [0, 5, 10, 15],
-  //   [3, 6, 9, 12],
-  // ];
+  let lines = findWinningLines(squares);
+  console.log(lines);
   let isDraw = true;
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c, d] = lines[i];
@@ -257,7 +252,8 @@ function calculateWinner(squares: Bingo) {
     ) {
       return { winner: squares[a], line: lines[i], isDraw: false };
     }
-    if (!(hasO && hasX)) {
+
+    if (!(hasX && hasO)) {
       isDraw = false;
     }
   }
