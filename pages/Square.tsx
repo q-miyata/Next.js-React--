@@ -1,4 +1,4 @@
-import { styles } from './_app.styles';
+import { styles } from './app.styles';
 import { memo } from 'react';
 export default memo(function Square({
   value,

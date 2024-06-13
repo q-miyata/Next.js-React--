@@ -1,5 +1,5 @@
 import { useState, memo, useEffect } from 'react';
-import { styles } from './_app.styles';
+import { styles } from './app.styles';
 
 import Board from './Board';
 import YonmokuBoard from './YonmokuBoard';

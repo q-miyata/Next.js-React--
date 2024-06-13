@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ToggleButton from './ToggleButton';
-import { lightTheme, darkTheme } from './_app.styles';
+import { lightTheme, darkTheme } from './app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
 
