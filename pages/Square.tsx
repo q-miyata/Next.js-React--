@@ -1,6 +1,8 @@
 import { styles } from './_app.styles';
 import { memo } from 'react';
-export default memo(function Square({
+import React from 'react';
+
+export default React.memo(function Square({
   value,
   onSquareClick,
   bingoSquare,
