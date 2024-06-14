@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useRef,
+  memo,
 } from 'react';
 import Square from './Square';
 import { BoardProps } from './Board';
@@ -58,7 +59,7 @@ export const Timer = ({ countTime }: { countTime: number }) => {
 //   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
 // };
 
-export default function YonmokuBoard({
+export default memo(function YonmokuBoard({
   xIsNext,
   squares,
   onPlay,
@@ -215,7 +216,7 @@ export default function YonmokuBoard({
       <h4 css={styles.h4}>注：行:1,2,3,4 列:A,B,C,D</h4>
     </>
   );
-}
+});
 
 type Bingo = ('X' | 'O' | null)[];
 

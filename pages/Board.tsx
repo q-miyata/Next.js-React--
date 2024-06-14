@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useRef,
+  memo,
 } from 'react';
 import Square from './Square';
 
@@ -64,7 +65,7 @@ export type BoardProps = {
   size: number;
 };
 
-export default function Board({
+export default memo(function Board({
   xIsNext,
   squares,
   onPlay,
@@ -188,7 +189,7 @@ export default function Board({
       <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>
     </>
   );
-}
+});
 
 type Bingo = ('X' | 'O' | null)[];
 
