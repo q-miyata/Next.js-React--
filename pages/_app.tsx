@@ -4,6 +4,7 @@ import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
 import { GameProvider, useGameContext } from './GameContext';
+import User from './user';
 
 const AppContent = () => {
   //const [isDarkMode, setIsDarkMode] = useState(false);
@@ -20,6 +21,7 @@ const AppContent = () => {
       <Global styles={global} />
       <div css={theme}>
         <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        <User />
         <Game />
       </div>
     </ThemeProvider>

@@ -15,6 +15,15 @@ export const darkTheme = {
 };
 
 export const styles = {
+  container: css`
+    display: flex;
+    align-items: center;
+  `,
+
+  username: css`
+    margin-left: 10px;
+  `,
+
   square: css`
     background: #fff;
     border: 1px solid #999;

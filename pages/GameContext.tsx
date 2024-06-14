@@ -1,18 +1,31 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { ReactNode, createContext, useContext, useState } from 'react';
 
-// Contextの作成
-export const GameContext = createContext(false);
-
-// カスタムフックを作成してコンテキストを利用
-export const useGameContext = () => {
-  return useContext(GameContext);
+type GameContext = {
+  isDarkMode: boolean;
+  setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  user: string;
+  icon: string;
+  // icon: HTMLImageElement;
 };
 
-export const GameProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+// Contextの作成
+//export const GameContext = createContext(false);
+export const GameContext = createContext<GameContext | undefined>(undefined);
 
+// カスタムフックを作成してコンテキストを利用
+export const useGameContext = (): GameContext | undefined => {
+  // return useContext(GameContext);
+  const context = useContext(GameContext);
+  return context;
+};
+
+//children の型タイプがわからない
+export const GameProvider = ({ children }: any) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const user = 'bubu';
+  const icon = '/images/user.icon.png';
   return (
-    <GameContext.Provider value={{ isDarkMode, setIsDarkMode }}>
+    <GameContext.Provider value={{ isDarkMode, setIsDarkMode, user, icon }}>
       {children}
     </GameContext.Provider>
   );
