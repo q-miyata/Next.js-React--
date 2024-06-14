@@ -3,10 +3,11 @@ import ToggleButton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
+import { GameProvider, useGameContext } from './GameContext';
 
-const App = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
+const AppContent = () => {
+  //const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, setIsDarkMode } = useGameContext();
   const theme = isDarkMode ? darkTheme : lightTheme;
   const global = {
     body: {
@@ -22,6 +23,14 @@ const App = () => {
         <Game />
       </div>
     </ThemeProvider>
+  );
+};
+
+const App = () => {
+  return (
+    <GameProvider>
+      <AppContent />
+    </GameProvider>
   );
 };
 
