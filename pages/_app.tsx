@@ -21,7 +21,7 @@ const AppContent = () => {
       <Global styles={global} />
       <div css={theme}>
         <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-        <User />
+
         <Game />
       </div>
     </ThemeProvider>
