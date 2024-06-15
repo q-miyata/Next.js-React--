@@ -78,14 +78,15 @@ export default memo(function Board({
   useEffect(() => {
     if (calcWinner) {
       setWinner(calcWinner);
-      setCountTime(0);
     }
   }, [calcWinner]);
 
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
+    setCountTime(0);
   } else if (isDraw) {
+    setCountTime(0);
     status = 'Draw';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');

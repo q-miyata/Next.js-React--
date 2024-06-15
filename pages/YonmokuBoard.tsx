@@ -66,12 +66,14 @@ export default memo(function YonmokuBoard({
   setWinner,
   winner,
   size,
+  countTime,
+  setCountTime,
 }: BoardProps): JSX.Element {
-  const [countTime, setCountTime] = useState<number>(5);
+  //const [countTime, setCountTime] = useState<number>(5);
 
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
   useEffect(() => {
-    setCountTime(5);
+    setCountTime(7);
   }, [xIsNext]);
   //useStateをparameterに渡すことでuseEffectをrunする
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
@@ -114,8 +116,10 @@ export default memo(function YonmokuBoard({
   let status;
   if (winner) {
     status = 'Winner: ' + winner;
+    setCountTime(0);
   } else if (isDraw) {
-    status = 'Drawww';
+    setCountTime(0);
+    status = 'Draw';
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }

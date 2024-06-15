@@ -115,6 +115,8 @@ export default memo(function Game() {
               winner={winner}
               setWinner={setWinner}
               size={boardSize}
+              countTime={countTime}
+              setCountTime={setCountTime}
             />
           )}
         </div>
