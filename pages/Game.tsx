@@ -11,6 +11,7 @@ type HistoryObject = {
 
 export default memo(function Game() {
   const [winner, setWinner] = useState<'O' | 'X' | null>(null);
+  const [countTime, setCountTime] = useState<number>(5);
 
   // const [history, setHistory] = useState<HistoryObject[]>([
   //   { squares: Array(9).fill(null), index: undefined },
@@ -50,6 +51,8 @@ export default memo(function Game() {
   function jumpTo(nextMove: number): void {
     setWinner(null);
     setCurrentMove(nextMove);
+    //これで同じプレーヤーの履歴に帰っても秒数が回復する
+    setCountTime(7);
   }
 
   const moves = history.map((step, move) => {
@@ -64,7 +67,7 @@ export default memo(function Game() {
     } else {
       description = '';
     }
-
+    //ここでsetTimeしたい
     return (
       <li key={move}>
         <button css={styles.description} onClick={() => jumpTo(move)}>
@@ -101,6 +104,8 @@ export default memo(function Game() {
               winner={winner}
               setWinner={setWinner}
               size={boardSize}
+              countTime={countTime}
+              setCountTime={setCountTime}
             />
           ) : (
             <YonmokuBoard

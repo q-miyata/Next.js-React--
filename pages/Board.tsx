@@ -17,6 +17,9 @@ export type BoardProps = {
   setWinner: (winner: 'X' | 'O' | null) => void;
   winner: 'X' | 'O' | null;
   size: number;
+  countTime: number;
+  setCountTime: React.Dispatch<React.SetStateAction<number>>;
+  //setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void;
 };
 
 export default memo(function Board({
@@ -26,20 +29,22 @@ export default memo(function Board({
   setWinner,
   winner,
   size,
+  countTime,
+  setCountTime,
 }: BoardProps): JSX.Element {
-  //親コンポーネントでstate管理
-  const [countTime, setCountTime] = useState<number>(5);
-  //親コンポーネントに移動させた
-  //const [winner, setWinner] = useState<'X' | 'O' | null>(null);
+  //親に移動
+  //const [countTime, setCountTime] = useState<number>(5);
 
   useEffect(() => {
-    setCountTime(5);
+    setCountTime(7);
   }, [xIsNext]);
-  //useStateをparameterに渡すことでuseEffectをrunする
+
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
 
   const handleClick = useCallback(
     (i: number) => {
+      //ボツ　履歴をクリックすると変わらない
+      // setCountTime(7);
       if (winner || squares[i] || isDraw) {
         return;
       }
