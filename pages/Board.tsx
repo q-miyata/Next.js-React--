@@ -19,7 +19,7 @@ export type BoardProps = {
   size: number;
 };
 
-export default memo(function Board({
+export default function Board({
   xIsNext,
   squares,
   onPlay,
@@ -143,7 +143,7 @@ export default memo(function Board({
       <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>
     </div>
   );
-});
+}
 
 type Bingo = ('X' | 'O' | null)[];
 

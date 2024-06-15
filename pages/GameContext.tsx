@@ -1,4 +1,10 @@
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from 'react';
 
 type GameContext = {
   isDarkMode: boolean;
@@ -22,6 +28,14 @@ export const useGameContext = (): GameContext | undefined => {
 //children の型タイプがわからない
 export const GameProvider = ({ children }: any) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect((): void => {
+    const darkModeMediaQuery = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    );
+    setIsDarkMode(darkModeMediaQuery.matches);
+  }, []);
+
   const user = 'bubu';
   const icon = '/images/user.icon.png';
   return (
