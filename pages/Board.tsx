@@ -78,6 +78,7 @@ export default memo(function Board({
   useEffect(() => {
     if (calcWinner) {
       setWinner(calcWinner);
+      setCountTime(0);
     }
   }, [calcWinner]);
 
