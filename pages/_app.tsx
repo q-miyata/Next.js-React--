@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ToggleButton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
-import { GameProvider, useGameContext } from './GameContext';
+import { GameContext, GameProvider } from './GameContext';
 import User from './user';
 
 const AppContent = () => {
+  const context = useContext(GameContext);
   //const [isDarkMode, setIsDarkMode] = useState(false);
-  const { isDarkMode, setIsDarkMode } = useGameContext();
-  const theme = isDarkMode ? darkTheme : lightTheme;
+  // const { isDarkMode, setIsDarkMode } = useGameContext();
+  const theme = context?.isDarkMode ? darkTheme : lightTheme;
   const global = {
     body: {
       backgroundColor: theme.body.background,
@@ -20,7 +21,7 @@ const AppContent = () => {
     <ThemeProvider theme={theme}>
       <Global styles={global} />
       <div css={theme}>
-        <ToggleButton isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        <ToggleButton />
 
         <Game />
       </div>

@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 
 type GameContext = {
-  isDarkMode: boolean;
+  isDarkMode?: boolean;
   setIsDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
   user: string;
   icon: string;
@@ -16,17 +16,17 @@ type GameContext = {
 
 // Contextの作成
 //export const GameContext = createContext(false);
-export const GameContext = createContext<GameContext | undefined>(undefined);
+export const GameContext = createContext<GameContext | null>(null);
 
 // カスタムフックを作成してコンテキストを利用
-export const useGameContext = (): GameContext | undefined => {
-  // return useContext(GameContext);
-  const context = useContext(GameContext);
-  return context;
-};
+// export const useGameContext = () => {
+//   // return useContext(GameContext);
+//   const context = useContext(GameContext);
+//   return context;
+// };
 
 //children の型タイプがわからない
-export const GameProvider = ({ children }: any) => {
+export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect((): void => {

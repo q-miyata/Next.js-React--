@@ -79,13 +79,18 @@ const Board = memo(function Board({
     } else {
       return 'Next player: ' + (xIsNext ? 'X' : 'O');
     }
-  }, [winner, isDraw, xIsNext, setCountTime]);
+  }, [winner, isDraw, xIsNext]);
 
   //Timerをけしても再レンダリング起こる。
+  //{/* <div css={styles.status}>{status}</div> */}
+  const Status = () => {
+    return <div css={styles.status}>{status}</div>;
+  };
   return (
     <div>
       <Timer countTime={countTime} />
-      <div css={styles.status}>{status}</div>
+
+      <Status />
       <TouryouButton
         setWinner={setWinner}
         xIsNext={xIsNext}
