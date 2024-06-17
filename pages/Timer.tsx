@@ -50,6 +50,6 @@ export const useCountDownInterval = (
   }, [countTime, setCountTime, setWinner, xIsNext]);
 };
 //countTimeはプロパティで、プロパティの型指定をしている
-export const Timer = ({ countTime }: { countTime: number }) => {
+export const Timer = memo(({ countTime }: { countTime: number }) => {
   return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
-};
+});

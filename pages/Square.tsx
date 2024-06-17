@@ -3,7 +3,7 @@ import { memo } from 'react';
 import React from 'react';
 
 //memo化されたhandleclick関数を引数として受け取ってる
-export default React.memo(function Square({
+export default memo(function Square({
   value,
   onSquareClick,
   bingoSquare,
