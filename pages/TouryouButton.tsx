@@ -1,3 +1,5 @@
+import React, { memo } from 'react';
+
 type TouryouButtonProps = {
   setWinner: (winner: 'X' | 'O' | null) => void;
   xIsNext: boolean;
@@ -19,4 +21,4 @@ const TouryouButton: React.FC<TouryouButtonProps> = ({
   return <button onClick={surrender}>降参します</button>;
 };
 
-export default TouryouButton;
+export default memo(TouryouButton);
