@@ -51,31 +51,35 @@ const Game = () => {
     setCountTime(7);
   }, []);
 
-  const moves = useMemo(
-    () =>
-      history.map((step, move) => {
-        let description;
+  const moves = useMemo(() => {
+    return history.map((step, move) => {
+      let description;
+      const coordinate = indexToCoordinate(step.index, boardSize);
 
-        const coordinate = indexToCoordinate(step.index, boardSize);
+      if (move > 0) {
+        description = `Go to move #${move}  ${coordinate}`;
+      } else if (move === 0) {
+        description = 'Go to game start';
+      } else {
+        description = '';
+      }
+      return (
+        <li key={move}>
+          <button css={styles.description} onClick={() => jumpTo(move)}>
+            {description}
+          </button>
+        </li>
+      );
+    });
+  }, [history, boardSize, jumpTo]);
 
-        if (move > 0) {
-          description = `Go to move #${move}  ${coordinate}`;
-        } else if (move === 0) {
-          description = 'Go to game start';
-        } else {
-          description = '';
-        }
-        //ここでsetTimeしたい
-        return (
-          <li key={move}>
-            <button css={styles.description} onClick={() => jumpTo(move)}>
-              {description}
-            </button>
-          </li>
-        );
-      }),
-    [history, boardSize, jumpTo]
-  );
+  const Move = useMemo(() => {
+    return (
+      <div css={styles.gameInfo}>
+        <ol>{moves}</ol>
+      </div>
+    );
+  }, [moves]);
 
   return (
     <div css={styles.pageContainer}>
@@ -121,9 +125,10 @@ const Game = () => {
           )}
         </div>
       </div>
-      <div css={styles.gameInfo}>
+      {Move}
+      {/* <div css={styles.gameInfo}>
         <ol>{moves}</ol>
-      </div>
+      </div> */}
     </div>
   );
 };
