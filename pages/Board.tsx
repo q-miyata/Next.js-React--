@@ -1,4 +1,5 @@
 import { styles } from './_app.styles';
+
 import React, {
   useCallback,
   useMemo,
@@ -51,6 +52,7 @@ const Board = memo(function Board({
       }
       onPlay(nextSquares, i);
     },
+
     [squares, xIsNext, onPlay, winner]
   );
 
@@ -161,7 +163,7 @@ function calculateWinner(squares: Bingo, size: number) {
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return { winner: squares[a], line: lines[i], isDraw: false };
     }
-
+    console.log([squares[a], squares[b], squares[c]]);
     const hasX = [squares[a], squares[b], squares[c]].includes('X');
     const hasO = [squares[a], squares[b], squares[c]].includes('O');
 
