@@ -9,8 +9,9 @@ import React, {
   memo,
 } from 'react';
 import Square from './Square';
-import { useCountDownInterval, Timer } from './Timer';
 
+import { useCountDownInterval, Timer } from './Timer';
+import TouryouButton from './TouryouButton';
 export type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
@@ -85,6 +86,11 @@ const Board = memo(function Board({
     <div>
       <Timer countTime={countTime} />
       <div css={styles.status}>{status}</div>
+      <TouryouButton
+        setWinner={setWinner}
+        xIsNext={xIsNext}
+        setCountTime={setCountTime}
+      />
       <div css={styles.boardRow}>
         <Square
           value={squares[0]}
