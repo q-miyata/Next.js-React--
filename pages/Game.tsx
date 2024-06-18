@@ -1,9 +1,17 @@
-import { useState, memo, useEffect, useMemo, useCallback } from 'react';
+import {
+  useState,
+  memo,
+  useEffect,
+  useMemo,
+  useCallback,
+  useContext,
+} from 'react';
 import { styles } from './_app.styles';
 
 import Board from './Board';
 import { Timer } from './Timer';
 import YonmokuBoard from './YonmokuBoard';
+import { GameContext, useGameContext } from './GameContext';
 
 type HistoryObject = {
   squares: ('X' | 'O' | null)[];
@@ -11,14 +19,25 @@ type HistoryObject = {
 };
 
 const Game = () => {
+  const context = useContext(GameContext);
   const [winner, setWinner] = useState<'O' | 'X' | null>(null);
-  const [countTime, setCountTime] = useState<number>(5);
-
+  // const [countTime, setCountTime] = useState<number>(5);
+  const { countTime, setCountTime } = useGameContext();
   //ボード選択
-  const [boardSize, setBoardSize] = useState<number | null>(null);
-  const handleBoardSelection = useCallback((size: number) => {
-    setBoardSize(size);
-  }, []);
+  //const [boardSize, setBoardSize] = useState<number | null>(null);
+  const { boardSize, setBoardSize } = useGameContext();
+  // const boardSize = context?.boardSize;
+  //?.で存在しなければundefinedを返す
+  //const setBoardSize = context?.setBoardSize;
+  const handleBoardSelection = useCallback(
+    (size: number) => {
+      //undefinedが出たときの対策
+      if (setBoardSize) {
+        setBoardSize(size);
+      }
+    },
+    [setBoardSize]
+  );
 
   const [history, setHistory] = useState<HistoryObject[]>([
     {
@@ -48,28 +67,32 @@ const Game = () => {
     setWinner(null);
     setCurrentMove(nextMove);
     //これで同じプレーヤーの履歴に帰っても秒数が回復する
-    setCountTime(7);
+    if (setCountTime) {
+      setCountTime(7);
+    }
   }, []);
 
   const moves = useMemo(() => {
     return history.map((step, move) => {
       let description;
-      const coordinate = indexToCoordinate(step.index, boardSize);
+      if (boardSize) {
+        const coordinate = indexToCoordinate(step.index, boardSize);
 
-      if (move > 0) {
-        description = `Go to move #${move}  ${coordinate}`;
-      } else if (move === 0) {
-        description = 'Go to game start';
-      } else {
-        description = '';
+        if (move > 0) {
+          description = `Go to move #${move}  ${coordinate}`;
+        } else if (move === 0) {
+          description = 'Go to game start';
+        } else {
+          description = '';
+        }
+        return (
+          <li key={move}>
+            <button css={styles.description} onClick={() => jumpTo(move)}>
+              {description}
+            </button>
+          </li>
+        );
       }
-      return (
-        <li key={move}>
-          <button css={styles.description} onClick={() => jumpTo(move)}>
-            {description}
-          </button>
-        </li>
-      );
     });
   }, [history, boardSize, jumpTo]);
 

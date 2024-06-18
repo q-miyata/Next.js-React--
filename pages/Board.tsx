@@ -9,6 +9,7 @@ import React, {
   memo,
 } from 'react';
 import Square from './Square';
+//onSquareclickが再生成されるのでsquareコンポーネントの再レンダリングが止められなかった
 
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
@@ -55,7 +56,7 @@ const Board = memo(function Board({
       onPlay(nextSquares, i);
     },
 
-    [squares, xIsNext, onPlay, winner]
+    [squares, xIsNext, onPlay, winner] //
   );
 
   const {
@@ -93,6 +94,7 @@ const Board = memo(function Board({
   const Annotation = () => {
     return <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>;
   };
+
   return (
     <div>
       <Timer countTime={countTime} />
@@ -103,57 +105,14 @@ const Board = memo(function Board({
         xIsNext={xIsNext}
         setCountTime={setCountTime}
       />
-      <div css={styles.boardRow}>
-        <Square
-          value={squares[0]}
-          onSquareClick={() => handleClick(0)}
-          bingoSquare={Boolean(line?.includes(0))}
-        />
-        <Square
-          value={squares[1]}
-          onSquareClick={() => handleClick(1)}
-          bingoSquare={Boolean(line?.includes(1))}
-        />
-        <Square
-          value={squares[2]}
-          onSquareClick={() => handleClick(2)}
-          bingoSquare={Boolean(line?.includes(2))}
-        />
-      </div>
-      <div css={styles.boardRow}>
-        <Square
-          value={squares[3]}
-          onSquareClick={() => handleClick(3)}
-          bingoSquare={Boolean(line?.includes(3))}
-        />
-        <Square
-          value={squares[4]}
-          onSquareClick={() => handleClick(4)}
-          bingoSquare={Boolean(line?.includes(4))}
-        />
-        <Square
-          value={squares[5]}
-          onSquareClick={() => handleClick(5)}
-          bingoSquare={Boolean(line?.includes(5))}
-        />
-      </div>
-      <div css={styles.boardRow}>
-        <Square
-          value={squares[6]}
-          onSquareClick={() => handleClick(6)}
-          bingoSquare={Boolean(line?.includes(6))}
-        />
-        <Square
-          value={squares[7]}
-          onSquareClick={() => handleClick(7)}
-          bingoSquare={Boolean(line?.includes(7))}
-        />
-        <Square
-          value={squares[8]}
-          onSquareClick={() => handleClick(8)}
-          bingoSquare={Boolean(line?.includes(8))}
-        />
-      </div>
+      {/* <div css={styles.boardRow}> */}
+      <Square
+        value={squares[0]}
+        onSquareClick={() => handleClick(0)}
+        bingoSquare={Boolean(line?.includes(0))}
+      />
+
+      {/* </div> */}
       <Annotation />
       {/* <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4> */}
     </div>
