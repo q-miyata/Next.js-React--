@@ -41,8 +41,9 @@ const Board = memo(function Board({
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
 
   const handleClick = useCallback(
-    (i: any) => {
-      if (winner || squares[i] || isDraw) {
+    (i: number) => {
+      const filledsquares = squares[i];
+      if (winner || filledsquares || isDraw) {
         return;
       }
       const nextSquares = squares.slice();

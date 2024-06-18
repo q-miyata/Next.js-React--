@@ -83,7 +83,9 @@ export default memo(function YonmokuBoard({
 
   const handleClick = useCallback(
     (i: number) => {
-      if (winner || squares[i] || isDraw) {
+      const filledSquares = squares[i];
+
+      if (winner || filledSquares || isDraw) {
         return;
       }
       const nextSquares = squares.slice();
