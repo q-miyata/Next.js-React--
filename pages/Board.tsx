@@ -87,6 +87,12 @@ const Board = memo(function Board({
   const Status = () => {
     return <div css={styles.status}>{status}</div>;
   };
+  // export const memo(function Annotation =()=>{
+  //   return <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>
+  // } );
+  const Annotation = () => {
+    return <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>;
+  };
   return (
     <div>
       <Timer countTime={countTime} />
@@ -148,7 +154,8 @@ const Board = memo(function Board({
           bingoSquare={Boolean(line?.includes(8))}
         />
       </div>
-      <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>
+      <Annotation />
+      {/* <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4> */}
     </div>
   );
 });
