@@ -131,8 +131,8 @@ const Game = () => {
               winner={winner}
               setWinner={setWinner}
               size={boardSize}
-              countTime={countTime}
-              setCountTime={setCountTime}
+              // countTime={countTime}
+              // setCountTime={setCountTime}
             />
           ) : (
             <YonmokuBoard
@@ -142,8 +142,8 @@ const Game = () => {
               winner={winner}
               setWinner={setWinner}
               size={boardSize}
-              countTime={countTime}
-              setCountTime={setCountTime}
+              // countTime={countTime}
+              // setCountTime={setCountTime}
             />
           )}
         </div>

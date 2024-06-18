@@ -13,6 +13,7 @@ import Square from './Square';
 
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
+import { useGameContext } from './GameContext';
 export type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
@@ -20,9 +21,8 @@ export type BoardProps = {
   setWinner: (winner: 'X' | 'O' | null) => void;
   winner: 'X' | 'O' | null;
   size: number;
-  countTime: number;
-  setCountTime: React.Dispatch<React.SetStateAction<number>>;
-  //setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void;
+  // countTime: number;
+  // setCountTime: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const Board = memo(function Board({
@@ -32,9 +32,11 @@ const Board = memo(function Board({
   setWinner,
   winner,
   size,
-  countTime,
-  setCountTime,
-}: BoardProps): JSX.Element {
+}: // countTime,
+// setCountTime,
+BoardProps): JSX.Element {
+  const { countTime, setCountTime } = useGameContext();
+
   useEffect(() => {
     setCountTime(7);
   }, [xIsNext, setCountTime]);
@@ -56,7 +58,7 @@ const Board = memo(function Board({
       onPlay(nextSquares, i);
     },
 
-    [squares, xIsNext, onPlay, winner] //
+    [squares, xIsNext, onPlay, winner]
   );
 
   const {
@@ -110,6 +112,11 @@ const Board = memo(function Board({
         value={squares[0]}
         onSquareClick={() => handleClick(0)}
         bingoSquare={Boolean(line?.includes(0))}
+      />
+      <Square
+        value={squares[1]}
+        onSquareClick={() => handleClick(1)}
+        bingoSquare={Boolean(line?.includes(1))}
       />
 
       {/* </div> */}

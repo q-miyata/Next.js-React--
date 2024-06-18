@@ -10,6 +10,7 @@ import React, {
 import Square from './Square';
 import { BoardProps } from './Board';
 import TouryouButton from './TouryouButton';
+import { useGameContext } from './GameContext';
 const useCountDownInterval = (
   countTime: number | null,
   //関数型の引数  返り値もここで定義？
@@ -69,11 +70,11 @@ export default memo(function YonmokuBoard({
   setWinner,
   winner,
   size,
-  countTime,
-  setCountTime,
-}: BoardProps): JSX.Element {
+}: // countTime,
+// setCountTime,
+BoardProps): JSX.Element {
   //const [countTime, setCountTime] = useState<number>(5);
-
+  const { countTime, setCountTime } = useGameContext();
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
   useEffect(() => {
     setCountTime(7);
