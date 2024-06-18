@@ -1,4 +1,7 @@
+import { useContext } from 'react';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
+import { GameContext, GameProvider } from './GameContext';
+import User from './user';
 
 //Type Alias　を使用。 引数に直接定義しても良い。
 type Props = {
@@ -7,18 +10,30 @@ type Props = {
 };
 
 //今回はreact.fcを使わなかった
-const ToggleButton = ({ isDarkMode, setIsDarkMode }: Props) => {
+// const ToggleButton = ({ isDarkMode, setIsDarkMode }: Props) => {
+const ToggleButton = () => {
+  //const { isDarkMode, setIsDarkMode } = useGameContext();
+  const context = useContext(GameContext);
   const toggleDarkMode = (checked: boolean) => {
-    setIsDarkMode(checked);
+    context?.setIsDarkMode(checked);
   };
 
   return (
-    <DarkModeSwitch
-      style={{ marginBottom: '2rem' }}
-      checked={isDarkMode}
-      onChange={toggleDarkMode}
-      size={50}
-    />
+    <div
+      css={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <DarkModeSwitch
+        // style={{ marginBottom: '2rem' }}
+        checked={context?.isDarkMode as boolean}
+        onChange={toggleDarkMode}
+        size={50}
+      />
+      <User />
+    </div>
   );
 };
 
