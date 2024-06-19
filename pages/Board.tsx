@@ -38,7 +38,7 @@ BoardProps): JSX.Element {
   const { countTime, setCountTime } = useGameContext();
 
   useEffect(() => {
-    setCountTime(7);
+    setCountTime(60);
   }, [xIsNext, setCountTime]);
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
@@ -71,7 +71,7 @@ BoardProps): JSX.Element {
     if (calcWinner) {
       setWinner(calcWinner);
     }
-  }, [calcWinner, setWinner]);
+  }, [calcWinner]);
 
   const status = useMemo(() => {
     if (winner) {
@@ -85,17 +85,57 @@ BoardProps): JSX.Element {
     }
   }, [winner, isDraw, xIsNext]);
 
-  //Timerをけしても再レンダリング起こる。
   //{/* <div css={styles.status}>{status}</div> */}
   const Status = () => {
     return <div css={styles.status}>{status}</div>;
   };
-  // export const memo(function Annotation =()=>{
-  //   return <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>
-  // } );
+
   const Annotation = () => {
     return <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>;
   };
+
+  const renderSquare = (i: number) => {
+    return (
+      <Square
+        value={squares[i]}
+        onSquareClick={() => handleClick(i)}
+        bingoSquare={Boolean(line?.includes(i))}
+      />
+    );
+  };
+  const boardRows = useMemo(() => {
+    //行を作っている Array.fromメソッドで指定された長さの配列を作っている。
+    //最初のreturnでネストされた配列を返している
+    return Array.from({ length: size }).map((_, row) => {
+      //列を作ってる
+      //各列ごとにrendersquare()を呼び出している
+      const squaresInRow = Array.from({ length: size }).map((_, col) =>
+        //指定された位置に関数を呼び出している。
+        renderSquare(row * size + col)
+      );
+      return (
+        <div key={row} style={{ display: 'flex' }}>
+          {squaresInRow}
+        </div>
+      );
+    });
+  }, [size, squares, handleClick]);
+
+  // const boardRows = useMemo(() => {
+  //   let rows = [];
+  //   for (let row = 0; row < size; row++) {
+  //     let squaresInRow = [];
+  //     for (let col = 0; col < size; col++) {
+  //       squaresInRow.push(renderSquare(row * size + col));
+  //     }
+  //     rows.push(
+  //       <div key={row} style={{ display: 'flex' }}>
+  //         {squaresInRow}
+  //       </div>
+  //     );
+  //   }
+  //   return rows;
+  // }, [size, squares, handleClick]);
 
   return (
     <div>
@@ -108,20 +148,10 @@ BoardProps): JSX.Element {
         setCountTime={setCountTime}
       />
       {/* <div css={styles.boardRow}> */}
-      <Square
-        value={squares[0]}
-        onSquareClick={() => handleClick(0)}
-        bingoSquare={Boolean(line?.includes(0))}
-      />
-      <Square
-        value={squares[1]}
-        onSquareClick={() => handleClick(1)}
-        bingoSquare={Boolean(line?.includes(1))}
-      />
+      <div>{boardRows}</div>
 
       {/* </div> */}
       <Annotation />
-      {/* <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4> */}
     </div>
   );
 });

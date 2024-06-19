@@ -10,58 +10,8 @@ import React, {
 import Square from './Square';
 import { BoardProps } from './Board';
 import TouryouButton from './TouryouButton';
+import { useCountDownInterval, Timer } from './Timer';
 import { useGameContext } from './GameContext';
-const useCountDownInterval = (
-  countTime: number | null,
-  //関数型の引数  返り値もここで定義？
-  //useState の状態更新関数を受け取っている
-  setCountTime: (value: number | ((prevCountTime: number) => number)) => void,
-  setWinner: (winner: 'X' | 'O' | null) => void,
-  xIsNext: boolean
-) => {
-  //setIntervalの型定義はこれになる
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    if (countTime === null) return;
-    //以前に設定したインターバルがあるなら消去する
-    if (intervalRef.current) {
-      //プロパティに格納されているため
-      clearInterval(intervalRef.current);
-    }
-
-    intervalRef.current = setInterval(() => {
-      //1秒ごとにsetCountTime()を実行
-      setCountTime((prevCountTime: number) => {
-        if (prevCountTime === 0) {
-          // 型アサーションを使用することで、TypeScriptコンパイラに対してintervalRef.currentの型がsetIntervalの戻り値の型であることを保証し、clearIntervalが適切に動作することを示しています
-          clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
-          //次のプレーヤーにするためXとOの順番入れ替えた。
-          setWinner(xIsNext ? 'O' : 'X');
-          return prevCountTime;
-        }
-        return prevCountTime - 1;
-      });
-      //1秒後は1000
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
-    };
-    //依存配列のどれかが変わったら関数がrunする
-  }, [countTime, setCountTime, setWinner, xIsNext]);
-};
-//countTimeはプロパティで、プロパティの型指定をしている
-export const Timer = ({ countTime }: { countTime: number }) => {
-  return <p>ゲーム残り時間: {countTime % 60}秒 </p>;
-};
-
-// type YonmokuProps = {
-//   xIsNext: boolean;
-//   squares: ('X' | 'O' | null)[];
-
-//   onPlay: (nextSquares: ('X' | 'O' | null)[], i: number) => void;
-// };
 
 export default memo(function YonmokuBoard({
   xIsNext,
@@ -77,7 +27,7 @@ BoardProps): JSX.Element {
   const { countTime, setCountTime } = useGameContext();
   //手番が変わった時に起こる処理　コンポーネント外に出したかったけど挫折
   useEffect(() => {
-    setCountTime(7);
+    setCountTime(60);
   }, [xIsNext]);
   //useStateをparameterに渡すことでuseEffectをrunする
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
@@ -119,115 +69,66 @@ BoardProps): JSX.Element {
       setWinner(calcWinner);
     }
   }, [calcWinner]);
-  let status;
-  if (winner) {
-    status = 'Winner: ' + winner;
-    setCountTime(0);
-  } else if (isDraw) {
-    setCountTime(0);
-    status = 'Draw';
-  } else {
-    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
-  }
+  const status = useMemo(() => {
+    if (winner) {
+      setCountTime(0);
+      return 'Winner: ' + winner;
+    } else if (isDraw) {
+      setCountTime(0);
+      return 'Draw';
+    } else {
+      return 'Next player: ' + (xIsNext ? 'X' : 'O');
+    }
+  }, [winner, isDraw, xIsNext]);
+
+  //{/* <div css={styles.status}>{status}</div> */}
+  const Status = () => {
+    return <div css={styles.status}>{status}</div>;
+  };
+
+  const Annotation = () => {
+    return <h4 css={styles.h4}>注：行:1,2,3 列:A,B,C</h4>;
+  };
+
+  const renderSquare = (i: number) => {
+    return (
+      <Square
+        value={squares[i]}
+        onSquareClick={() => handleClick(i)}
+        bingoSquare={Boolean(line?.includes(i))}
+      />
+    );
+  };
+
+  const boardRows = useMemo(() => {
+    //行を作っている Array.fromメソッドで指定された長さの配列を作っている。
+    //最初のreturnでネストされた配列を返している
+    return Array.from({ length: size }).map((_, row) => {
+      //列を作ってる
+      //各列ごとにrendersquare()を呼び出している
+      const squaresInRow = Array.from({ length: size }).map((_, col) =>
+        //指定された位置に関数を呼び出している。
+        renderSquare(row * size + col)
+      );
+      return (
+        <div key={row} style={{ display: 'flex' }}>
+          {squaresInRow}
+        </div>
+      );
+    });
+  }, [size, squares, handleClick]);
 
   return (
     <>
       <Timer countTime={countTime} />
-      <div css={styles.status}>{status}</div>
+      <Status />
       <TouryouButton
         setWinner={setWinner}
         xIsNext={xIsNext}
         setCountTime={setCountTime}
       />
-      <div css={styles.yonmokuBoardRow}>
-        <Square
-          value={squares[0]}
-          onSquareClick={() => handleClick(0)}
-          bingoSquare={Boolean(line?.includes(0))}
-        />
-        <Square
-          value={squares[1]}
-          onSquareClick={() => handleClick(1)}
-          bingoSquare={Boolean(line?.includes(1))}
-        />
-        <Square
-          value={squares[2]}
-          onSquareClick={() => handleClick(2)}
-          bingoSquare={Boolean(line?.includes(2))}
-        />
-        <Square
-          value={squares[3]}
-          onSquareClick={() => handleClick(3)}
-          bingoSquare={Boolean(line?.includes(3))}
-        />
-      </div>
-      <div css={styles.yonmokuBoardRow}>
-        <Square
-          value={squares[4]}
-          onSquareClick={() => handleClick(4)}
-          bingoSquare={Boolean(line?.includes(4))}
-        />
-        <Square
-          value={squares[5]}
-          onSquareClick={() => handleClick(5)}
-          bingoSquare={Boolean(line?.includes(5))}
-        />
-        <Square
-          value={squares[6]}
-          onSquareClick={() => handleClick(6)}
-          bingoSquare={Boolean(line?.includes(6))}
-        />
-        <Square
-          value={squares[7]}
-          onSquareClick={() => handleClick(7)}
-          bingoSquare={Boolean(line?.includes(7))}
-        />
-      </div>
-      <div css={styles.yonmokuBoardRow}>
-        <Square
-          value={squares[8]}
-          onSquareClick={() => handleClick(8)}
-          bingoSquare={Boolean(line?.includes(8))}
-        />
-        <Square
-          value={squares[9]}
-          onSquareClick={() => handleClick(9)}
-          bingoSquare={Boolean(line?.includes(9))}
-        />
-        <Square
-          value={squares[10]}
-          onSquareClick={() => handleClick(10)}
-          bingoSquare={Boolean(line?.includes(10))}
-        />
-        <Square
-          value={squares[11]}
-          onSquareClick={() => handleClick(11)}
-          bingoSquare={Boolean(line?.includes(11))}
-        />
-      </div>
-      <div css={styles.yonmokuBoardRow}>
-        <Square
-          value={squares[12]}
-          onSquareClick={() => handleClick(12)}
-          bingoSquare={Boolean(line?.includes(12))}
-        />
-        <Square
-          value={squares[13]}
-          onSquareClick={() => handleClick(13)}
-          bingoSquare={Boolean(line?.includes(13))}
-        />
-        <Square
-          value={squares[14]}
-          onSquareClick={() => handleClick(14)}
-          bingoSquare={Boolean(line?.includes(14))}
-        />
-        <Square
-          value={squares[15]}
-          onSquareClick={() => handleClick(15)}
-          bingoSquare={Boolean(line?.includes(15))}
-        />
-      </div>
-      <h4 css={styles.h4}>注：行:1,2,3,4 列:A,B,C,D</h4>
+      <div>{boardRows}</div>
+      <Annotation />
     </>
   );
 });
@@ -238,7 +139,6 @@ function calculateWinner(squares: Bingo, size: number) {
   const findWinningLines = (squares: Bingo) => {
     //const size = Math.sqrt(squares.length);
 
-    console.log('Yonmoku size is' + size);
     const range = [...Array(size).keys()];
 
     const rows = range.map((i) => range.map((j) => i * size + j));
@@ -251,7 +151,7 @@ function calculateWinner(squares: Bingo, size: number) {
   };
 
   let lines = findWinningLines(squares);
-  console.log(lines);
+
   let isDraw = true;
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c, d] = lines[i];
