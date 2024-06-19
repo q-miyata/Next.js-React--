@@ -127,7 +127,7 @@ BoardProps): JSX.Element {
         xIsNext={xIsNext}
         setCountTime={setCountTime}
       />
-      <div>{boardRows}</div>
+      {boardRows}
       <Annotation />
     </>
   );

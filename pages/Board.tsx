@@ -148,9 +148,8 @@ BoardProps): JSX.Element {
         setCountTime={setCountTime}
       />
       {/* <div css={styles.boardRow}> */}
-      <div>{boardRows}</div>
+      {boardRows}
 
-      {/* </div> */}
       <Annotation />
     </div>
   );
