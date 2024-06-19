@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, memo } from 'react';
 import ToggleButton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
@@ -6,7 +6,7 @@ import Game from './Game';
 import { GameContext, GameProvider } from './GameContext';
 import User from './user';
 
-const AppContent = () => {
+const AppContent = memo(() => {
   const context = useContext(GameContext);
   //const [isDarkMode, setIsDarkMode] = useState(false);
   // const { isDarkMode, setIsDarkMode } = useGameContext();
@@ -27,7 +27,7 @@ const AppContent = () => {
       </div>
     </ThemeProvider>
   );
-};
+});
 
 const App = () => {
   return (
