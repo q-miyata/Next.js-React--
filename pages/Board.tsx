@@ -13,7 +13,9 @@ import Square from './Square';
 
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
-import { useGameContext } from './GameContext';
+import { useAtom } from 'jotai';
+import { countTimeAtom } from './atoms';
+
 export type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
@@ -35,10 +37,10 @@ const Board = memo(function Board({
 }: // countTime,
 // setCountTime,
 BoardProps): JSX.Element {
-  const { countTime, setCountTime } = useGameContext();
+  const [countTime, setCountTime] = useAtom(countTimeAtom);
 
   useEffect(() => {
-    setCountTime(60);
+    setCountTime(6);
   }, [xIsNext, setCountTime]);
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);

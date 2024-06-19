@@ -11,7 +11,9 @@ import { styles } from './_app.styles';
 import Board from './Board';
 import { Timer } from './Timer';
 import YonmokuBoard from './YonmokuBoard';
-import { GameContext, useGameContext } from './GameContext';
+import { boardSizeAtom, countTimeAtom } from './atoms';
+import { useAtom } from 'jotai';
+//import { GameContext, useGameContext } from './GameContext';
 
 type HistoryObject = {
   squares: ('X' | 'O' | null)[];
@@ -19,16 +21,11 @@ type HistoryObject = {
 };
 
 const Game = () => {
-  const context = useContext(GameContext);
+  const [countTime, setCountTime] = useAtom(countTimeAtom);
   const [winner, setWinner] = useState<'O' | 'X' | null>(null);
-  // const [countTime, setCountTime] = useState<number>(5);
-  const { countTime, setCountTime } = useGameContext();
+
   //ボード選択
-  //const [boardSize, setBoardSize] = useState<number | null>(null);
-  const { boardSize, setBoardSize } = useGameContext();
-  // const boardSize = context?.boardSize;
-  //?.で存在しなければundefinedを返す
-  //const setBoardSize = context?.setBoardSize;
+  const [boardSize, setBoardSize] = useAtom(boardSizeAtom);
   const handleBoardSelection = useCallback(
     (size: number) => {
       //undefinedが出たときの対策

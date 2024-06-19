@@ -3,14 +3,14 @@ import ToggleButton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
-import { GameContext, GameProvider } from './GameContext';
+
 import User from './user';
+import { useAtom } from 'jotai';
+import { isDarkModeAtom } from './atoms';
 
 const AppContent = memo(() => {
-  const context = useContext(GameContext);
-  //const [isDarkMode, setIsDarkMode] = useState(false);
-  // const { isDarkMode, setIsDarkMode } = useGameContext();
-  const theme = context?.isDarkMode ? darkTheme : lightTheme;
+  const [isDarkMode] = useAtom(isDarkModeAtom);
+  const theme = isDarkMode ? darkTheme : lightTheme;
   const global = {
     body: {
       backgroundColor: theme.body.background,
@@ -31,9 +31,9 @@ const AppContent = memo(() => {
 
 const App = () => {
   return (
-    <GameProvider>
-      <AppContent />
-    </GameProvider>
+    // <GameProvider>
+    <AppContent />
+    //</GameProvider>
   );
 };
 
