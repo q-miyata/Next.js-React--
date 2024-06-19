@@ -174,13 +174,25 @@ function calculateWinner(squares: Bingo, size: number) {
   let isDraw = true;
 
   for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return { winner: squares[a], line: lines[i], isDraw: false };
+    const line = lines[i];
+    //line 配列の最初の要素を first 変数に、残りの要素を rest 配列に格納
+    const [first, ...rest] = line;
+    //every メソッド　restの各要素に対して指定された関数を実行しすべての要素が条件を満たす場合にtrueを返す
+    const allSame = rest.every((index) => squares[index] === squares[first]);
+
+    if (squares[first] && allSame) {
+      return { winner: squares[first], line: lines[i], isDraw: false };
     }
-    console.log([squares[a], squares[b], squares[c]]);
-    const hasX = [squares[a], squares[b], squares[c]].includes('X');
-    const hasO = [squares[a], squares[b], squares[c]].includes('O');
+
+    const hasX = line.some((index) => squares[index] === 'X');
+    const hasO = line.some((index) => squares[index] === 'O');
+
+    // const [a, b, c] = lines[i];
+    // if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+    //   return { winner: squares[a], line: lines[i], isDraw: false };
+    // }
+    // const hasX = [squares[a], squares[b], squares[c]].includes('X');
+    // const hasO = [squares[a], squares[b], squares[c]].includes('O');
 
     if (!(hasX && hasO)) {
       isDraw = false;

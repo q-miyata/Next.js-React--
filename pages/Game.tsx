@@ -123,19 +123,8 @@ const Game = () => {
                 board ４✖︎４
               </button>
             </div>
-          ) : boardSize === 3 ? (
-            <Board
-              xIsNext={xIsNext}
-              squares={currentSquares}
-              onPlay={handlePlay}
-              winner={winner}
-              setWinner={setWinner}
-              size={boardSize}
-              // countTime={countTime}
-              // setCountTime={setCountTime}
-            />
           ) : (
-            <YonmokuBoard
+            <Board
               xIsNext={xIsNext}
               squares={currentSquares}
               onPlay={handlePlay}
