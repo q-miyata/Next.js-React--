@@ -11,7 +11,15 @@ import { styles } from './_app.styles';
 import Board from './Board';
 import { Timer } from './Timer';
 import YonmokuBoard from './YonmokuBoard';
-import { boardSizeAtom, countTimeAtom } from './atoms';
+import {
+  boardSizeAtom,
+  countTimeAtom,
+  currentMoveAtom,
+  currentSquaresAtom,
+  historyAtom,
+  winnerAtom,
+  xIsNextAtom,
+} from './atoms';
 import { useAtom } from 'jotai';
 //import { GameContext, useGameContext } from './GameContext';
 
@@ -22,7 +30,12 @@ type HistoryObject = {
 
 const Game = () => {
   const [countTime, setCountTime] = useAtom(countTimeAtom);
-  const [winner, setWinner] = useState<'O' | 'X' | null>(null);
+  //const [winner, setWinner] = useState<'O' | 'X' | null>(null);
+  const [winner, setWinner] = useAtom(winnerAtom);
+  const [currentMove, setCurrentMove] = useAtom(currentMoveAtom);
+  const [xIsNext] = useAtom(xIsNextAtom);
+  const [history, setHistory] = useAtom(historyAtom);
+  const [currentSquares] = useAtom(currentSquaresAtom);
 
   //ボード選択
   const [boardSize, setBoardSize] = useAtom(boardSizeAtom);
@@ -36,17 +49,17 @@ const Game = () => {
     [setBoardSize]
   );
 
-  const [history, setHistory] = useState<HistoryObject[]>([
-    {
-      //boardSize がnull だった場合　0を返す
-      squares: Array(Math.pow(boardSize || 0, 2)).fill(null),
-      index: undefined,
-    },
-  ]);
-  const [currentMove, setCurrentMove] = useState<number>(0);
+  // const [history, setHistory] = useState<HistoryObject[]>([
+  //   {
+  //     //boardSize がnull だった場合　0を返す
+  //     // { squares: Array(9).fill(null), index: undefined },
+  //     squares: Array(Math.pow(boardSize || 0, 2)).fill(null),
+  //     index: undefined,
+  //   },
+  // ]);
 
-  const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove].squares;
+  //const xIsNext = currentMove % 2 === 0;
+  //const currentSquares = history[currentMove].squares;
 
   const handlePlay = useCallback(
     (nextSquares: ('X' | 'O' | null)[], i: number) => {
@@ -60,14 +73,16 @@ const Game = () => {
     [history, currentMove]
   );
 
-  const jumpTo = useCallback((nextMove: number) => {
-    setWinner(null);
-    setCurrentMove(nextMove);
-    //これで同じプレーヤーの履歴に帰っても秒数が回復する
-    if (setCountTime) {
+  const jumpTo = useCallback(
+    (nextMove: number) => {
+      setWinner(null);
+      setCurrentMove(nextMove);
+      //これで同じプレーヤーの履歴に帰っても秒数が回復する
+
       setCountTime(7);
-    }
-  }, []);
+    },
+    [setWinner, setCurrentMove, setCountTime]
+  );
 
   const moves = useMemo(() => {
     return history.map((step, move) => {
@@ -122,7 +137,7 @@ const Game = () => {
             </div>
           ) : (
             <Board
-              xIsNext={xIsNext}
+              //xIsNext={xIsNext}
               squares={currentSquares}
               onPlay={handlePlay}
               winner={winner}
