@@ -18,13 +18,13 @@ type HistoryObject = {
 };
 
 const Game = () => {
-  //対戦モード用のAtom
-  const [squares, setSquares] = useAtom(gameStateAtom);
-  const [isXNext, setIsNext] = useAtom(isXNextAtom);
-  const [socket] = useAtom(socketAtom);
-
   const [countTime, setCountTime] = useAtom(countTimeAtom);
   const [winner, setWinner] = useState<'O' | 'X' | null>(null);
+
+  //対戦モード用のAtom
+  const [squares, setSquares] = useAtom(gameStateAtom);
+  const [isXNext, setIsXNext] = useAtom(isXNextAtom);
+  const [socket] = useAtom(socketAtom);
 
   //ボード選択
   const [boardSize, setBoardSize] = useAtom(boardSizeAtom);
@@ -61,8 +61,24 @@ const Game = () => {
       ];
       setHistory(nextHistory);
       setCurrentMove(nextHistory.length - 1);
+
+      setSquares(nextSquares);
+      setIsXNext(!isXNext);
+
+      if (socket) {
+        socket.emit('move', { squares: nextSquares, isNext: !isXNext });
+      }
     },
-    [history, currentMove]
+    [
+      history,
+      currentMove,
+      setHistory,
+      setCurrentMove,
+      setSquares,
+      setIsXNext,
+      socket,
+      isXNext,
+    ]
   );
 
   const jumpTo = useCallback((nextMove: number) => {

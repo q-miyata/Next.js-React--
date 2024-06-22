@@ -19,11 +19,15 @@ const AppContent = memo(() => {
   const [isNext, setIsNext] = useAtom(isXNextAtom);
 
   useEffect(() => {
+    //Socket.IOのインスタンスを作成し、サーバーに接続。io関数を使ってサーバーに接続。
     const newSocket = io('http://localhost:3001');
+
+    //接続が確立された後このインスタンスをAtomにセット
     setSocket(newSocket);
 
+    //サーバーからのmoveイベントをlisten
     newSocket.on('move', (data) => {
-      //共有したいデータを渡す
+      //受信したデータに基づいて以下を更新
       setSquares(data.squares);
       setIsNext(data.isNext);
     });
@@ -54,11 +58,7 @@ const AppContent = memo(() => {
 });
 
 const App = () => {
-  return (
-    // <GameProvider>
-    <AppContent />
-    //</GameProvider>
-  );
+  return <AppContent />;
 };
 
 export default App;
