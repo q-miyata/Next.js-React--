@@ -30,6 +30,7 @@ const ToggleButton = () => {
       }}
     >
       <DarkModeSwitch
+        //checked={context?.isDarkMode as boolean}
         checked={isDarkMode}
         onChange={toggleDarkMode}
         size={50}
