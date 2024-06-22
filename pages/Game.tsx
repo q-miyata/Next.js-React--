@@ -7,13 +7,10 @@ import {
   useContext,
 } from 'react';
 import { styles } from './_app.styles';
-
 import Board from './Board';
-import { Timer } from './Timer';
-import YonmokuBoard from './YonmokuBoard';
 import { boardSizeAtom, countTimeAtom } from './atoms';
 import { useAtom } from 'jotai';
-//import { GameContext, useGameContext } from './GameContext';
+import { gameStateAtom, isXNextAtom, socketAtom } from './atoms';
 
 type HistoryObject = {
   squares: ('X' | 'O' | null)[];
@@ -21,6 +18,11 @@ type HistoryObject = {
 };
 
 const Game = () => {
+  //対戦モード用のAtom
+  const [squares, setSquares] = useAtom(gameStateAtom);
+  const [isXNext, setIsNext] = useAtom(isXNextAtom);
+  const [socket] = useAtom(socketAtom);
+
   const [countTime, setCountTime] = useAtom(countTimeAtom);
   const [winner, setWinner] = useState<'O' | 'X' | null>(null);
 
@@ -47,6 +49,9 @@ const Game = () => {
 
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
+
+  //squaresを グローバルにしたい
+  setSquares(currentSquares);
 
   const handlePlay = useCallback(
     (nextSquares: ('X' | 'O' | null)[], i: number) => {

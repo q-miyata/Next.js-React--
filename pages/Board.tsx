@@ -8,13 +8,14 @@ import React, {
   useRef,
   memo,
 } from 'react';
-import Square from './Square';
+
 //onSquareclickが再生成されるのでsquareコンポーネントの再レンダリングが止められなかった
 
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
 import { useAtom } from 'jotai';
-import { countTimeAtom } from './atoms';
+import { countTimeAtom, gameStateAtom } from './atoms';
+import Square from './Square';
 
 export type BoardProps = {
   xIsNext: boolean;
@@ -29,7 +30,7 @@ export type BoardProps = {
 
 const Board = memo(function Board({
   xIsNext,
-  squares,
+  //squares,
   onPlay,
   setWinner,
   winner,
@@ -37,6 +38,10 @@ const Board = memo(function Board({
 }: // countTime,
 // setCountTime,
 BoardProps): JSX.Element {
+  //global atom
+  const [squares, setSquares] = useAtom(gameStateAtom);
+  console.log(squares);
+
   const [countTime, setCountTime] = useAtom(countTimeAtom);
 
   useEffect(() => {
@@ -354,7 +359,7 @@ export default Board;
 // function calculateWinner(squares: Bingo, size: number) {
 //   const findWinningLines = (squares: Bingo) => {
 //     // const size =;
-//     console.log('Sanmoku size is' + size);
+//
 //     //Array.prototype.keys()メソッド マスの並びのインデックス　rangeの中身は[0,1,2]
 //     const range = [...Array(size).keys()];
 //     //ネストしたmap iは行jは列　よって　0*3+0, 0*3+1 0*3+2 で[0,1,2] 内側のmapはincrement j
