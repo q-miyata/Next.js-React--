@@ -40,7 +40,7 @@ const Board = memo(function Board({
 BoardProps): JSX.Element {
   //global atom
   const [squares, setSquares] = useAtom(gameStateAtom);
-  console.log(squares);
+  //const [g, setGameState] = useAtom(gameStateAtom);
 
   const [countTime, setCountTime] = useAtom(countTimeAtom);
 

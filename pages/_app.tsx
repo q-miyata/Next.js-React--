@@ -18,24 +18,72 @@ const AppContent = memo(() => {
   const [squares, setSquares] = useAtom(gameStateAtom);
   const [isNext, setIsNext] = useAtom(isXNextAtom);
 
+  //このsquaresをサーバーに送受信したい
+  console.log(squares);
+
   useEffect(() => {
-    //Socket.IOのインスタンスを作成し、サーバーに接続。io関数を使ってサーバーに接続。
+    //Socket.IOのインスタンスを作成し、サーバーに接続
     const newSocket = io('http://localhost:3001');
 
-    //接続が確立された後このインスタンスをAtomにセット
+    // 接続が確立された後、このインスタンスをAtomにセット
     setSocket(newSocket);
 
-    //サーバーからのmoveイベントをlisten
-    newSocket.on('move', (data) => {
-      //受信したデータに基づいて以下を更新
-      setSquares(data.squares);
-      setIsNext(data.isNext);
+    // サーバーからの受信をリッスン
+    newSocket.on('connect', () => {
+      console.log('connected to server');
     });
 
+    newSocket.on('squares', (squares) => {
+      console.log('received:', squares);
+      setSquares(squares);
+    });
+
+    // コンポーネントがアンマウントされるときにSocketを切断
     return () => {
-      newSocket.close();
+      newSocket.disconnect();
     };
-  }, [setSocket, setSquares, setIsNext]);
+  }, [setSocket, setSquares]);
+
+  // squaresの変更をサーバーに送信
+  useEffect(() => {
+    if (socket) {
+      console.log('squares has sent');
+      socket.emit('squares', squares);
+    }
+  }, [socket, squares]);
+
+  // useEffect(() => {
+  //   //Socket.IOのインスタンスを作成し、サーバーに接続。io関数を使ってサーバーに接続。
+  //   const newSocket = io('http://localhost:3001');
+
+  //   //接続が確立された後このインスタンスをAtomにセット
+  //   setSocket(newSocket);
+
+  //   newSocket.on('connect', () => {
+  //     console.log('connected to server');
+  //   });
+
+  //   //サーバーから受信
+  //   newSocket.on('squares', (squares) => {
+  //     console.log('received:', squares);
+
+  //     setSquares(squares);
+  //   });
+
+  //   //サーバーに送信
+  //   function sendSquare(squares) {
+  //     newSocket.emit('squares', squares);
+  //   }
+
+  //   useEffect(() => {
+  //     sendSquare(squares);
+  //   }, [squares]);
+
+  //   return () => {
+  //     //newSocket.close();
+  //     newSocket.disconnect();
+  //   };
+  // }, [setSocket, setSquares, setIsNext]);
 
   const [isDarkMode] = useAtom(isDarkModeAtom);
   const theme = isDarkMode ? darkTheme : lightTheme;

@@ -66,7 +66,7 @@ const Game = () => {
       setIsXNext(!isXNext);
 
       if (socket) {
-        socket.emit('move', { squares: nextSquares, isNext: !isXNext });
+        socket.emit('squares', nextSquares);
       }
     },
     [
@@ -80,6 +80,19 @@ const Game = () => {
       isXNext,
     ]
   );
+
+  //一応moveもしておく
+  useEffect(() => {
+    if (socket) {
+      socket.on('move', (data) => {
+        setSquares(data.squares);
+        setIsXNext(data.isNext);
+      });
+      return () => {
+        socket.off('move');
+      };
+    }
+  }, [socket, setSquares, setIsXNext]);
 
   const jumpTo = useCallback((nextMove: number) => {
     setWinner(null);

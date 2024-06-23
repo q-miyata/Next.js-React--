@@ -3,6 +3,8 @@ const http = require('http');
 const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app);
+
+//ioインスタンス作成（サーバーを渡す）
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:3000',
@@ -13,8 +15,9 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.on('move', (data) => {
-    socket.broadcast.emit('move', data);
+  socket.on('squares', (squares) => {
+    console.log('sqquares received: ', squares);
+    io.emit('squares', squares);
   });
 
   socket.on('disconnect', () => {
