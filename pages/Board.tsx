@@ -45,7 +45,7 @@ BoardProps): JSX.Element {
   const [countTime, setCountTime] = useAtom(countTimeAtom);
 
   useEffect(() => {
-    setCountTime(6);
+    setCountTime(60);
   }, [xIsNext, setCountTime]);
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);

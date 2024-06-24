@@ -30,13 +30,12 @@ const AppContent = memo(() => {
       console.log('connected to server');
     });
 
-    //ここで無限ループになるよ
     //サーバーから受け取ったスクエアをsetするから
 
     newSocket.on('received_squares', (squares) => {
       console.log('received:', squares);
 
-      // setSquares(squares);
+      // setSquares(squares);これを開けると無限ループになる
     });
 
     // コンポーネントがアンマウントされるときにSocketを切断
