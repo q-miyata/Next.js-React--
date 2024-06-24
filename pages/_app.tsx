@@ -18,9 +18,6 @@ const AppContent = memo(() => {
   const [squares, setSquares] = useAtom(gameStateAtom);
   const [isNext, setIsNext] = useAtom(isXNextAtom);
 
-  //このsquaresをサーバーに送受信したい
-  console.log(squares);
-
   useEffect(() => {
     //Socket.IOのインスタンスを作成し、サーバーに接続
     const newSocket = io('http://localhost:3001');
@@ -33,9 +30,13 @@ const AppContent = memo(() => {
       console.log('connected to server');
     });
 
-    newSocket.on('squares', (squares) => {
+    //ここで無限ループになるよ
+    //サーバーから受け取ったスクエアをsetするから
+
+    newSocket.on('received_squares', (squares) => {
       console.log('received:', squares);
-      setSquares(squares);
+
+      // setSquares(squares);
     });
 
     // コンポーネントがアンマウントされるときにSocketを切断
@@ -48,7 +49,8 @@ const AppContent = memo(() => {
   useEffect(() => {
     if (socket) {
       console.log('squares has sent');
-      socket.emit('squares', squares);
+      //サーバーへ送信
+      socket.emit('send_squares', squares);
     }
   }, [socket, squares]);
 
