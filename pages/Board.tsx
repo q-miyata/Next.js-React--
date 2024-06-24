@@ -40,9 +40,12 @@ const Board = memo(function Board({
 // setCountTime,
 BoardProps): JSX.Element {
   //global atom
-  const [squares, setSquares] = useAtom(gameStateAtom);
+  //const [squares, setSquares] = useAtom(gameStateAtom); ここを閉じてみむ
+
   //const [g, setGameState] = useAtom(gameStateAtom);
 
+  //squaresをatomではなくuseState管理に移す。
+  const [squares, setSquares] = useState(Array(size * size).fill(null));
   const [countTime, setCountTime] = useAtom(countTimeAtom);
 
   //サーバーからsquaresを持ってきてレンダーしたい
@@ -52,8 +55,10 @@ BoardProps): JSX.Element {
   useEffect(() => {
     if (!socket) return;
 
-    const handleReceivedSquares = (squares) => {
-      console.log('received:', squares);
+    const handleReceivedSquares = (receivedSquares) => {
+      console.log('received:', receivedSquares);
+      setSquares(receivedSquares);
+      // setSquares(receivedSquares); これすると無限らんになる
     };
 
     socket.on('received_squares', handleReceivedSquares);
@@ -147,22 +152,6 @@ BoardProps): JSX.Element {
     });
   }, [size, squares, handleClick]);
 
-  // const boardRows = useMemo(() => {
-  //   let rows = [];
-  //   for (let row = 0; row < size; row++) {
-  //     let squaresInRow = [];
-  //     for (let col = 0; col < size; col++) {
-  //       squaresInRow.push(renderSquare(row * size + col));
-  //     }
-  //     rows.push(
-  //       <div key={row} style={{ display: 'flex' }}>
-  //         {squaresInRow}
-  //       </div>
-  //     );
-  //   }
-  //   return rows;
-  // }, [size, squares, handleClick]);
-
   return (
     <div>
       <Timer countTime={countTime} />
@@ -173,7 +162,7 @@ BoardProps): JSX.Element {
         xIsNext={xIsNext}
         setCountTime={setCountTime}
       />
-      {/* <div css={styles.boardRow}> */}
+
       {boardRows}
 
       <Annotation />
