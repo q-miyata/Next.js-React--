@@ -31,7 +31,6 @@ export type BoardProps = {
 
 const Board = memo(function Board({
   xIsNext,
-  //squares,
   onPlay,
   setWinner,
   winner,
@@ -39,9 +38,6 @@ const Board = memo(function Board({
 }: // countTime,
 // setCountTime,
 BoardProps): JSX.Element {
-  //global atom
-  //const [squares, setSquares] = useAtom(gameStateAtom); ここを閉じてみむ
-
   //const [g, setGameState] = useAtom(gameStateAtom);
 
   //squaresをatomではなくuseState管理に移す。
@@ -105,7 +101,7 @@ BoardProps): JSX.Element {
   }, [calcWinner]);
 
   const status = useMemo(() => {
-    if (winner) {
+    if (winner && !isDraw) {
       setCountTime(0);
       return 'Winner: ' + winner;
     } else if (isDraw) {

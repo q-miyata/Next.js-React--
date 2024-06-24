@@ -23,7 +23,6 @@ const Game = () => {
 
   //対戦モード用のAtom
   const [squares, setSquares] = useAtom(gameStateAtom);
-  const [isXNext, setIsXNext] = useAtom(isXNextAtom);
   const [socket] = useAtom(socketAtom);
 
   //ボード選択
@@ -50,7 +49,6 @@ const Game = () => {
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
 
-  //squaresを グローバルにしたい
   setSquares(currentSquares);
 
   const handlePlay = useCallback(
@@ -63,7 +61,6 @@ const Game = () => {
       setCurrentMove(nextHistory.length - 1);
 
       setSquares(nextSquares);
-      setIsXNext(!isXNext);
 
       if (socket) {
         socket.emit('squares', nextSquares);
@@ -75,31 +72,18 @@ const Game = () => {
       setHistory,
       setCurrentMove,
       setSquares,
-      setIsXNext,
+      // setIsXNext,
       socket,
-      isXNext,
+      //isXNext,
     ]
   );
-
-  //一応moveもしておく
-  useEffect(() => {
-    if (socket) {
-      socket.on('move', (data) => {
-        setSquares(data.squares);
-        setIsXNext(data.isNext);
-      });
-      return () => {
-        socket.off('move');
-      };
-    }
-  }, [socket, setSquares, setIsXNext]);
 
   const jumpTo = useCallback((nextMove: number) => {
     setWinner(null);
     setCurrentMove(nextMove);
     //これで同じプレーヤーの履歴に帰っても秒数が回復する
     if (setCountTime) {
-      setCountTime(7);
+      setCountTime(60);
     }
   }, []);
 
