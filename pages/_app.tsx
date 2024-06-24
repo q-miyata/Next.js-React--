@@ -4,19 +4,13 @@ import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
 import { useAtom } from 'jotai';
-import {
-  gameStateAtom,
-  isDarkModeAtom,
-  isXNextAtom,
-  socketAtom,
-} from './atoms';
+import { gameStateAtom, isDarkModeAtom, socketAtom } from './atoms';
 import io from 'socket.io-client';
 
 //AppコンポーネントでSocket.ioの接続を管理
 const AppContent = memo(() => {
   const [socket, setSocket] = useAtom(socketAtom);
   const [squares, setSquares] = useAtom(gameStateAtom);
-  const [isNext, setIsNext] = useAtom(isXNextAtom);
 
   useEffect(() => {
     //Socket.IOのインスタンスを作成し、サーバーに接続
@@ -29,6 +23,8 @@ const AppContent = memo(() => {
     newSocket.on('connect', () => {
       console.log('connected to server');
     });
+
+    //サーバーから受け取ったスクエアをsetするから
 
     // コンポーネントがアンマウントされるときにSocketを切断
     return () => {
