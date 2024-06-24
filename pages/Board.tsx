@@ -14,8 +14,9 @@ import React, {
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
 import { useAtom } from 'jotai';
-import { countTimeAtom, gameStateAtom } from './atoms';
+import { countTimeAtom, gameStateAtom, socketAtom } from './atoms';
 import Square from './Square';
+import io from 'socket.io-client';
 
 export type BoardProps = {
   xIsNext: boolean;
@@ -45,6 +46,22 @@ BoardProps): JSX.Element {
   const [countTime, setCountTime] = useAtom(countTimeAtom);
 
   //サーバーからsquaresを持ってきてレンダーしたい
+  const [socket, setSocket] = useAtom(socketAtom);
+
+  //null対策にuseEffectを使う
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleReceivedSquares = (squares) => {
+      console.log('received:', squares);
+    };
+
+    socket.on('received_squares', handleReceivedSquares);
+
+    return () => {
+      socket.off('received_squares', handleReceivedSquares);
+    };
+  }, [socket]);
 
   useEffect(() => {
     setCountTime(60);
