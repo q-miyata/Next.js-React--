@@ -44,6 +44,8 @@ BoardProps): JSX.Element {
 
   const [countTime, setCountTime] = useAtom(countTimeAtom);
 
+  //サーバーからsquaresを持ってきてレンダーしたい
+
   useEffect(() => {
     setCountTime(60);
   }, [xIsNext, setCountTime]);
