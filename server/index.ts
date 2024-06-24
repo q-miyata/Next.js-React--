@@ -30,6 +30,10 @@ io.on('connection', (socket) => {
     io.emit('received_squares', squares);
   });
 
+  socket.on('received_moves', (xIsNext) => {
+    console.log('X is next', xIsNext);
+  });
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });

@@ -64,8 +64,17 @@ BoardProps): JSX.Element {
     };
   }, [socket]);
 
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   setCountTime(60);
+
+  //   socket.emit('received_moves', xIsNext);
+  //   }, [xIsNext, setCountTime]);
+
   useEffect(() => {
+    if (!socket) return;
     setCountTime(60);
+    socket.emit('received_moves', xIsNext);
   }, [xIsNext, setCountTime]);
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
