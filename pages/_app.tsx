@@ -52,39 +52,6 @@ const AppContent = memo(() => {
     }
   }, [socket, squares]);
 
-  // useEffect(() => {
-  //   //Socket.IOのインスタンスを作成し、サーバーに接続。io関数を使ってサーバーに接続。
-  //   const newSocket = io('http://localhost:3001');
-
-  //   //接続が確立された後このインスタンスをAtomにセット
-  //   setSocket(newSocket);
-
-  //   newSocket.on('connect', () => {
-  //     console.log('connected to server');
-  //   });
-
-  //   //サーバーから受信
-  //   newSocket.on('squares', (squares) => {
-  //     console.log('received:', squares);
-
-  //     setSquares(squares);
-  //   });
-
-  //   //サーバーに送信
-  //   function sendSquare(squares) {
-  //     newSocket.emit('squares', squares);
-  //   }
-
-  //   useEffect(() => {
-  //     sendSquare(squares);
-  //   }, [squares]);
-
-  //   return () => {
-  //     //newSocket.close();
-  //     newSocket.disconnect();
-  //   };
-  // }, [setSocket, setSquares, setIsNext]);
-
   const [isDarkMode] = useAtom(isDarkModeAtom);
   const theme = isDarkMode ? darkTheme : lightTheme;
   const global = {
