@@ -62,6 +62,16 @@ const Game = () => {
     socket.emit('send_xIsNextCurrentMove', { xIsNext, currentMove });
   }, [socket, xIsNext, currentMove]);
 
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    socket.on('init', (initialSquares) => {
+      console.log(initialSquares);
+    });
+  }, [socket]);
+
   const handlePlay = useCallback(
     (nextSquares: ('X' | 'O' | null)[], i: number) => {
       const nextHistory = [

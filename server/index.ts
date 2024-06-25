@@ -1,3 +1,5 @@
+import { Socket } from 'socket.io-client';
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -12,11 +14,15 @@ const io = new Server(server, {
   },
 });
 
-//let currentSquares = Array(9).fill(null);
+let initialSquares = Array(9).fill(null);
+let gameState = { test: '', player1: '', player2: '', squares: initialSquares };
 
 //io.onはサーバー全体に対してイベントリスナーを設定
 io.on('connection', (socket) => {
   console.log('a user connected');
+  console.log(socket.client.conn.id);
+
+  io.emit('init', gameState.squares);
 
   //socket.onは個々のクライアント接続に使われる。
   //onは受信
