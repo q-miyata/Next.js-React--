@@ -46,10 +46,13 @@ const Game = () => {
   ]);
   const [currentMove, setCurrentMove] = useState<number>(0);
 
+  //これをサーバーに送りたい。まずはnextだけ
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
 
   setSquares(currentSquares);
+
+  socket.emit('send_xIsNext', xIsNext);
 
   const handlePlay = useCallback(
     (nextSquares: ('X' | 'O' | null)[], i: number) => {
@@ -62,9 +65,10 @@ const Game = () => {
 
       setSquares(nextSquares);
 
-      if (socket) {
-        socket.emit('squares', nextSquares);
-      }
+      //appContaintsから送ってるからここは用無し
+      // if (socket) {
+      //   socket.emit('squares', nextSquares);
+      // }
     },
     [
       history,

@@ -24,14 +24,16 @@ io.on('connection', (socket) => {
 
   //クライアントから受信
   socket.on('send_squares', (squares) => {
-    console.log('sqquares received: ', squares);
+    // console.log('sqquares received: ', squares);
 
     //クライアントにデータを送信 ioかsocketどっち？
     io.emit('received_squares', squares);
   });
 
-  socket.on('received_moves', (xIsNext) => {
+  socket.on('send_xIsNext', (xIsNext) => {
     console.log('X is next', xIsNext);
+
+    io.emit('received_xIsNext', xIsNext);
   });
 
   socket.on('disconnect', () => {

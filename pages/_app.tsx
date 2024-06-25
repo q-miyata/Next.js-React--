@@ -32,7 +32,7 @@ const AppContent = memo(() => {
     };
   }, [setSocket, setSquares]);
 
-  // squaresの変更をサーバーに送信
+  // squaresの変更をサーバーに送信 追記：boardコンポーネントからおくるべきだったかも
   useEffect(() => {
     if (socket) {
       console.log('squares has sent');

@@ -30,7 +30,7 @@ export type BoardProps = {
 };
 
 const Board = memo(function Board({
-  xIsNext,
+  //xIsNext,
   onPlay,
   setWinner,
   winner,
@@ -38,14 +38,14 @@ const Board = memo(function Board({
 }: // countTime,
 // setCountTime,
 BoardProps): JSX.Element {
-  //const [g, setGameState] = useAtom(gameStateAtom);
+  const [socket, setSocket] = useAtom(socketAtom);
+
+  //socket.on('received_xIsNext',xIsNext)
 
   //squaresをatomではなくuseState管理に移す。
   const [squares, setSquares] = useState(Array(size * size).fill(null));
   const [countTime, setCountTime] = useAtom(countTimeAtom);
-
-  //サーバーからsquaresを持ってきてレンダーしたい
-  const [socket, setSocket] = useAtom(socketAtom);
+  const [xIsNext, setxIsNext] = useState(true);
 
   //null対策にuseEffectを使う
   useEffect(() => {
@@ -72,9 +72,9 @@ BoardProps): JSX.Element {
   //   }, [xIsNext, setCountTime]);
 
   useEffect(() => {
-    if (!socket) return;
+    // if (!socket) return;
     setCountTime(60);
-    socket.emit('received_moves', xIsNext);
+    //socket.emit('send_xIsNext', xIsNext);
   }, [xIsNext, setCountTime]);
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
