@@ -30,10 +30,13 @@ io.on('connection', (socket) => {
     io.emit('received_squares', squares);
   });
 
-  socket.on('send_xIsNext', (xIsNext) => {
-    console.log('X is next', xIsNext);
+  socket.on('send_xIsNextCurrentMove', ({ xIsNext, currentMove }) => {
+    console.log('I got data', { xIsNext, currentMove });
 
-    io.emit('received_xIsNext', xIsNext);
+    io.emit('send_xIsNextCurrentMove', {
+      receivedMove: currentMove,
+      receivedXIsNext: xIsNext,
+    });
   });
 
   socket.on('disconnect', () => {

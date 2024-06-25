@@ -46,13 +46,21 @@ const Game = () => {
   ]);
   const [currentMove, setCurrentMove] = useState<number>(0);
 
-  //これをサーバーに送りたい。まずはnextだけ
+  //これをサーバーに送りたい。currentMoveをサーバで管理しないと正しく反映されない。
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
 
   setSquares(currentSquares);
 
-  socket.emit('send_xIsNext', xIsNext);
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    //const xIsNextCurrentMove = {xIsNext,currentMove};
+
+    socket.emit('send_xIsNextCurrentMove', { xIsNext, currentMove });
+  }, [socket, xIsNext, currentMove]);
 
   const handlePlay = useCallback(
     (nextSquares: ('X' | 'O' | null)[], i: number) => {
@@ -61,6 +69,7 @@ const Game = () => {
         { squares: nextSquares, index: i },
       ];
       setHistory(nextHistory);
+
       setCurrentMove(nextHistory.length - 1);
 
       setSquares(nextSquares);

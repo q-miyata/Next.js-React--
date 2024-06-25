@@ -46,6 +46,7 @@ BoardProps): JSX.Element {
   const [squares, setSquares] = useState(Array(size * size).fill(null));
   const [countTime, setCountTime] = useAtom(countTimeAtom);
   const [xIsNext, setxIsNext] = useState(true);
+  const [currentMove, setCurrentMove] = useState(0);
 
   //null対策にuseEffectを使う
   useEffect(() => {
@@ -54,7 +55,6 @@ BoardProps): JSX.Element {
     const handleReceivedSquares = (receivedSquares) => {
       console.log('received:', receivedSquares);
       setSquares(receivedSquares);
-      // setSquares(receivedSquares); これすると無限らんになる
     };
 
     socket.on('received_squares', handleReceivedSquares);
@@ -64,17 +64,24 @@ BoardProps): JSX.Element {
     };
   }, [socket]);
 
-  // useEffect(() => {
-  //   if (!socket) return;
-  //   setCountTime(60);
+  useEffect(() => {
+    if (!socket) return;
 
-  //   socket.emit('received_moves', xIsNext);
-  //   }, [xIsNext, setCountTime]);
+    const handleReceivedGameState = ({ receivedMove, receivedXIsNext }) => {
+      setCurrentMove(receivedMove);
+
+      setxIsNext(receivedXIsNext);
+    };
+
+    socket.on('send_xIsNextCurrentMove', handleReceivedGameState);
+
+    return () => {
+      socket.off('send_xIsNextCurrentMove', handleReceivedGameState);
+    };
+  }, [socket]);
 
   useEffect(() => {
-    // if (!socket) return;
     setCountTime(60);
-    //socket.emit('send_xIsNext', xIsNext);
   }, [xIsNext, setCountTime]);
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
