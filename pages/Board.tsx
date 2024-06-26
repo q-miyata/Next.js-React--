@@ -14,7 +14,13 @@ import React, {
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
 import { useAtom } from 'jotai';
-import { countTimeAtom, gameStateAtom, playerSymbolAtom, socketAtom, currentTurnAtom } from './atoms';
+import {
+  countTimeAtom,
+  gameStateAtom,
+  playerSymbolAtom,
+  socketAtom,
+  currentTurnAtom,
+} from './atoms';
 import Square from './Square';
 import io from 'socket.io-client';
 
@@ -66,21 +72,21 @@ BoardProps): JSX.Element {
     };
   }, [socket]);
 
-  useEffect(() => {
-    if (!socket) return;
+  // useEffect(() => {
+  //   if (!socket) return;
 
-    const handleReceivedGameState = ({ receivedMove, receivedXIsNext }) => {
-      setCurrentMove(receivedMove);
+  //   const handleReceivedGameState = ({ receivedMove, receivedXIsNext }) => {
+  //     setCurrentMove(receivedMove);
 
-      setxIsNext(receivedXIsNext);
-    };
+  //     setxIsNext(receivedXIsNext);
+  //   };
 
-    socket.on('send_xIsNextCurrentMove', handleReceivedGameState);
+  //   socket.on('send_xIsNextCurrentMove', handleReceivedGameState);
 
-    return () => {
-      socket.off('send_xIsNextCurrentMove', handleReceivedGameState);
-    };
-  }, [socket]);
+  //   return () => {
+  //     socket.off('send_xIsNextCurrentMove', handleReceivedGameState);
+  //   };
+  // }, [socket]);
 
   useEffect(() => {
     setCountTime(60);
@@ -91,13 +97,18 @@ BoardProps): JSX.Element {
   const handleClick = useCallback(
     (i: number) => {
       console.log('33312123 handleClick', i, playerSymbol);
-      socket.emit('move', { coordinate: i, player: playerSymbol})
+      socket.emit('move', { coordinate: i, player: playerSymbol });
+
       const filledsquares = squares[i];
+
       if (winner || filledsquares || isDraw) {
         return;
       }
+      if (currentTurn !== playerSymbol) {
+        return;
+      }
       const nextSquares = squares.slice();
-      nextSquares[i] = playerSymbol;
+      nextSquares[i] = playerSymbol; //ここを作用させないようにしたい
       // if (xIsNext) {
       //   nextSquares[i] = 'X';
       // } else {
@@ -129,7 +140,7 @@ BoardProps): JSX.Element {
       setCountTime(0);
       return 'Draw';
     } else {
-      return 'Next player: ' +  playerSymbol;
+      return 'Next player: ' + playerSymbol;
     }
   }, [winner, isDraw, xIsNext]);
 
@@ -172,18 +183,15 @@ BoardProps): JSX.Element {
   return (
     <div>
       You are {playerSymbol} <br />
-      turn : { currentTurn } <br />
+      turn : {currentTurn} <br />
       <Timer countTime={countTime} />
-
       <Status />
       <TouryouButton
         setWinner={setWinner}
         xIsNext={xIsNext}
         setCountTime={setCountTime}
       />
-
       {boardRows}
-
       <Annotation />
     </div>
   );

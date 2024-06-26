@@ -8,7 +8,12 @@ import {
 } from 'react';
 import { styles } from './_app.styles';
 import Board from './Board';
-import { boardSizeAtom, countTimeAtom, currentTurnAtom, playerSymbolAtom } from './atoms';
+import {
+  boardSizeAtom,
+  countTimeAtom,
+  currentTurnAtom,
+  playerSymbolAtom,
+} from './atoms';
 import { useAtom } from 'jotai';
 import { gameStateAtom, isXNextAtom, socketAtom } from './atoms';
 
@@ -36,9 +41,7 @@ const Game = () => {
       if (!socket) {
         return;
       }
-      socket.emit('selectboard', { boardSize: size })
-
-
+      socket.emit('selectboard', { boardSize: size });
     },
     [setBoardSize, socket]
   );
@@ -65,7 +68,7 @@ const Game = () => {
     console.log('useEffect!!!4544');
     console.log(socket);
 
-    socket.on('setboard', ({boardSize}) => {
+    socket.on('setboard', ({ boardSize }) => {
       //undefinedが出たときの対策
       if (setBoardSize) {
         console.log(`setting board size to `, boardSize);
@@ -74,7 +77,7 @@ const Game = () => {
     });
 
     socket.on('setplayer', ({ playerSymbol }) => {
-      console.log(99999)
+      console.log(99999);
       //undefinedが出たときの対策
       if (setPlayerSymbol) {
         console.log(`setting playerSymbol as `, playerSymbol);
@@ -83,10 +86,10 @@ const Game = () => {
     });
 
     socket.on('setturn', ({ turn }) => {
-      console.log(99999)
+      console.log(99999);
       //undefinedが出たときの対策
       if (setCurrentTurn) {
-        console.log(`setting turn as `, turn);
+        console.log(`setting turn as `, turn); //ここ再レンダリングがすごい
         setCurrentTurn(turn);
       }
     });
@@ -136,7 +139,7 @@ const Game = () => {
 
   const resetPlayers = () => {
     socket.emit('resetplayers', {});
-  }
+  };
 
   const moves = useMemo(() => {
     return history.map((step, move) => {
