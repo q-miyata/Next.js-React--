@@ -62,7 +62,9 @@ BoardProps): JSX.Element {
 
     const handleReceivedSquares = (receivedSquares) => {
       console.log('received:', receivedSquares);
+      //サーバーのスクエアをこのブラウザのボードにセット
       setSquares(receivedSquares);
+      console.log('squares issssssss: ' + squares);
     };
 
     socket.on('received_squares', handleReceivedSquares);
@@ -72,21 +74,21 @@ BoardProps): JSX.Element {
     };
   }, [socket]);
 
-  // useEffect(() => {
-  //   if (!socket) return;
+  useEffect(() => {
+    if (!socket) return;
 
-  //   const handleReceivedGameState = ({ receivedMove, receivedXIsNext }) => {
-  //     setCurrentMove(receivedMove);
+    const handleReceivedGameState = ({ receivedMove, receivedXIsNext }) => {
+      setCurrentMove(receivedMove);
 
-  //     setxIsNext(receivedXIsNext);
-  //   };
+      setxIsNext(receivedXIsNext);
+    };
 
-  //   socket.on('send_xIsNextCurrentMove', handleReceivedGameState);
+    socket.on('send_xIsNextCurrentMove', handleReceivedGameState);
 
-  //   return () => {
-  //     socket.off('send_xIsNextCurrentMove', handleReceivedGameState);
-  //   };
-  // }, [socket]);
+    return () => {
+      socket.off('send_xIsNextCurrentMove', handleReceivedGameState);
+    };
+  }, [socket]);
 
   useEffect(() => {
     setCountTime(15);
@@ -108,7 +110,7 @@ BoardProps): JSX.Element {
         return;
       }
       const nextSquares = squares.slice();
-      nextSquares[i] = playerSymbol; //ここを作用させないようにしたい
+      nextSquares[i] = playerSymbol;
       // if (xIsNext) {
       //   nextSquares[i] = 'X';
       // } else {

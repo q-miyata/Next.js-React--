@@ -47,7 +47,7 @@ export const useCountDownInterval = (
       clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
     };
     //依存配列のどれかが変わったら関数がrunする
-  }, [countTime, setCountTime, setWinner, xIsNext]);
+  }, [countTime, xIsNext]);
 };
 //countTimeはプロパティで、プロパティの型指定をしている
 export const Timer = memo(({ countTime }: { countTime: number }) => {
