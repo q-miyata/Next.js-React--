@@ -90,7 +90,7 @@ BoardProps): JSX.Element {
 
   useEffect(() => {
     setCountTime(15);
-  }, [xIsNext, setCountTime]);
+  }, [currentTurn, setCountTime]); //xIsNextをcurrentTurnに変更
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
 
