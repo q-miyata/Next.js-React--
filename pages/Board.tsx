@@ -89,7 +89,7 @@ BoardProps): JSX.Element {
   // }, [socket]);
 
   useEffect(() => {
-    setCountTime(60);
+    setCountTime(15);
   }, [xIsNext, setCountTime]);
 
   useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);

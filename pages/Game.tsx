@@ -133,7 +133,7 @@ const Game = () => {
     setCurrentMove(nextMove);
     //これで同じプレーヤーの履歴に帰っても秒数が回復する
     if (setCountTime) {
-      setCountTime(60);
+      setCountTime(15);
     }
   }, []);
 
