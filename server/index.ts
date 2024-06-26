@@ -30,6 +30,8 @@ io.on('connection', (socket) => {
   console.log('socket.conn ', socket.id);
   // console.log(socket.conn);
   console.log(socket.conn.server.clientsCount);
+
+  //socketidでユーザーをセットしている。
   if (globalState.playerX === '') {
     globalState.playerX = socket.id;
     console.log(globalState);
@@ -54,6 +56,7 @@ io.on('connection', (socket) => {
   socket.on('move', ({ coordinate, player }) => {
     console.log('11server move ', coordinate, player);
     const nextTurn = player === 'X' ? 'O' : 'X'; //ここよくわからん
+
     globalState.currentTurn = nextTurn;
     console.log(globalState);
 
@@ -63,6 +66,9 @@ io.on('connection', (socket) => {
   socket.on('resetplayers', () => {
     globalState.playerX = '';
     globalState.playerO = '';
+    //無理やりここでリセットした時にターンを初期化する。追記：上記にあるnextTurnのせいで初期化できなかった
+    globalState.currentTurn = 'X';
+
     console.log(globalState);
   });
 
