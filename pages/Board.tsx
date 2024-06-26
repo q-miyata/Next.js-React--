@@ -142,9 +142,9 @@ BoardProps): JSX.Element {
       setCountTime(0);
       return 'Draw';
     } else {
-      return 'Next player: ' + playerSymbol;
+      return 'Next player: ' + currentTurn; //playerSymbol
     }
-  }, [winner, isDraw, xIsNext]);
+  }, [winner, isDraw, xIsNext, currentTurn]);
 
   //{/* <div css={styles.status}>{status}</div> */}
   const Status = () => {
