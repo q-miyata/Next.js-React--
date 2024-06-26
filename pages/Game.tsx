@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { styles } from './_app.styles';
 import Board from './Board';
-import { boardSizeAtom, countTimeAtom } from './atoms';
+import { boardSizeAtom, countTimeAtom, currentTurnAtom, playerSymbolAtom } from './atoms';
 import { useAtom } from 'jotai';
 import { gameStateAtom, isXNextAtom, socketAtom } from './atoms';
 
@@ -27,14 +27,20 @@ const Game = () => {
 
   //ボード選択
   const [boardSize, setBoardSize] = useAtom(boardSizeAtom);
+
+  const [playerSymbol, setPlayerSymbol] = useAtom(playerSymbolAtom);
+  const [currentTurn, setCurrentTurn] = useAtom(currentTurnAtom);
+
   const handleBoardSelection = useCallback(
     (size: number) => {
-      //undefinedが出たときの対策
-      if (setBoardSize) {
-        setBoardSize(size);
+      if (!socket) {
+        return;
       }
+      socket.emit('selectboard', { boardSize: size })
+
+
     },
-    [setBoardSize]
+    [setBoardSize, socket]
   );
 
   const [history, setHistory] = useState<HistoryObject[]>([
@@ -56,6 +62,34 @@ const Game = () => {
     if (!socket) {
       return;
     }
+    console.log('useEffect!!!4544');
+    console.log(socket);
+
+    socket.on('setboard', ({boardSize}) => {
+      //undefinedが出たときの対策
+      if (setBoardSize) {
+        console.log(`setting board size to `, boardSize);
+        setBoardSize(boardSize);
+      }
+    });
+
+    socket.on('setplayer', ({ playerSymbol }) => {
+      console.log(99999)
+      //undefinedが出たときの対策
+      if (setPlayerSymbol) {
+        console.log(`setting playerSymbol as `, playerSymbol);
+        setPlayerSymbol(playerSymbol);
+      }
+    });
+
+    socket.on('setturn', ({ turn }) => {
+      console.log(99999)
+      //undefinedが出たときの対策
+      if (setCurrentTurn) {
+        console.log(`setting turn as `, turn);
+        setCurrentTurn(turn);
+      }
+    });
 
     //const xIsNextCurrentMove = {xIsNext,currentMove};
 
@@ -99,6 +133,10 @@ const Game = () => {
       setCountTime(60);
     }
   }, []);
+
+  const resetPlayers = () => {
+    socket.emit('resetplayers', {});
+  }
 
   const moves = useMemo(() => {
     return history.map((step, move) => {
@@ -169,6 +207,7 @@ const Game = () => {
       {/* <div css={styles.gameInfo}>
         <ol>{moves}</ol>
       </div> */}
+      <button onClick={resetPlayers}>Reset Players</button>
     </div>
   );
 };

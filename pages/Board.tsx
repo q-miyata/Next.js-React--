@@ -14,7 +14,7 @@ import React, {
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
 import { useAtom } from 'jotai';
-import { countTimeAtom, gameStateAtom, socketAtom } from './atoms';
+import { countTimeAtom, gameStateAtom, playerSymbolAtom, socketAtom, currentTurnAtom } from './atoms';
 import Square from './Square';
 import io from 'socket.io-client';
 
@@ -39,6 +39,8 @@ const Board = memo(function Board({
 // setCountTime,
 BoardProps): JSX.Element {
   const [socket, setSocket] = useAtom(socketAtom);
+  const [playerSymbol, setPlayerSymbol] = useAtom(playerSymbolAtom);
+  const [currentTurn, setCurrentTurn] = useAtom(currentTurnAtom);
 
   //socket.on('received_xIsNext',xIsNext)
 
@@ -88,20 +90,23 @@ BoardProps): JSX.Element {
 
   const handleClick = useCallback(
     (i: number) => {
+      console.log('33312123 handleClick', i, playerSymbol);
+      socket.emit('move', { coordinate: i, player: playerSymbol})
       const filledsquares = squares[i];
       if (winner || filledsquares || isDraw) {
         return;
       }
       const nextSquares = squares.slice();
-      if (xIsNext) {
-        nextSquares[i] = 'X';
-      } else {
-        nextSquares[i] = 'O';
-      }
+      nextSquares[i] = playerSymbol;
+      // if (xIsNext) {
+      //   nextSquares[i] = 'X';
+      // } else {
+      //   nextSquares[i] = 'O';
+      // }
       onPlay(nextSquares, i);
     },
 
-    [squares, xIsNext, onPlay, winner]
+    [squares, xIsNext, onPlay, winner, playerSymbol]
   );
 
   const {
@@ -124,7 +129,7 @@ BoardProps): JSX.Element {
       setCountTime(0);
       return 'Draw';
     } else {
-      return 'Next player: ' + (xIsNext ? 'X' : 'O');
+      return 'Next player: ' +  playerSymbol;
     }
   }, [winner, isDraw, xIsNext]);
 
@@ -166,6 +171,8 @@ BoardProps): JSX.Element {
 
   return (
     <div>
+      You are {playerSymbol} <br />
+      turn : { currentTurn } <br />
       <Timer countTime={countTime} />
 
       <Status />
@@ -182,7 +189,7 @@ BoardProps): JSX.Element {
   );
 });
 
-type Bingo = ('X' | 'O' | null)[];
+export type Bingo = ('X' | 'O' | null)[];
 
 function calculateWinner(squares: Bingo, size: number) {
   const findWinningLines = (squares: Bingo) => {
