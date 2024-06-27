@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
 
   //クライアントから受信
   socket.on('send_squares', (squares) => {
-    // console.log('sqquares received: ', squares);
+    console.log('squares received: ', squares);
 
     //クライアントにデータを送信 ioかsocketどっち？
     io.emit('received_squares', squares);

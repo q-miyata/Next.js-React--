@@ -61,10 +61,9 @@ BoardProps): JSX.Element {
     if (!socket) return;
 
     const handleReceivedSquares = (receivedSquares) => {
-      console.log('received:', receivedSquares);
       //サーバーのスクエアをこのブラウザのボードにセット
       setSquares(receivedSquares);
-      console.log('squares issssssss: ' + squares);
+      console.log('squares issssssss: ' + receivedSquares); //squaresをreceivedSquaresに変更
     };
 
     socket.on('received_squares', handleReceivedSquares);
@@ -94,7 +93,8 @@ BoardProps): JSX.Element {
     setCountTime(15);
   }, [currentTurn, setCountTime]); //xIsNextをcurrentTurnに変更
 
-  useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
+  //useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
+  useCountDownInterval(countTime, setCountTime, setWinner); //xIsNextがなくなったから勝者判定のバグがでた？
 
   const handleClick = useCallback(
     (i: number) => {
