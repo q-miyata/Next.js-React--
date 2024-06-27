@@ -94,7 +94,7 @@ BoardProps): JSX.Element {
   }, [currentTurn, setCountTime]); //xIsNextをcurrentTurnに変更
 
   //useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
-  useCountDownInterval(countTime, setCountTime, setWinner); //xIsNextがなくなったから勝者判定のバグがでた？
+  useCountDownInterval(countTime, setCountTime, setWinner, winner); //xIsNextがなくなったから勝者判定のバグがでた？
 
   const handleClick = useCallback(
     (i: number) => {
@@ -131,6 +131,7 @@ BoardProps): JSX.Element {
   useEffect(() => {
     if (calcWinner) {
       setWinner(calcWinner);
+      setCountTime(0);
     }
   }, [calcWinner]);
 

@@ -14,7 +14,8 @@ export const useCountDownInterval = (
   //関数型の引数  返り値もここで定義？
   //useState の状態更新関数を受け取っている
   setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
-  setWinner: (winner: 'X' | 'O' | null) => void
+  setWinner: (winner: 'X' | 'O' | null) => void,
+  winner: 'X' | 'O' | null
   //xIsNext: boolean
   //isDraw: boolean
 ) => {
@@ -38,9 +39,12 @@ export const useCountDownInterval = (
           // 型アサーションを使用することで、TypeScriptコンパイラに対してintervalRef.currentの型がsetIntervalの戻り値の型であることを保証し、clearIntervalが適切に動作することを示しています
           clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
 
-          setWinner(currentTurn ? 'O' : 'X');
-
-          return prevCountTime;
+          if (!winner) {
+            setWinner(currentTurn ? 'O' : 'X');
+            return prevCountTime;
+          } else {
+            return prevCountTime;
+          }
         }
         return prevCountTime - 1;
       });
