@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
   socket.on('resetplayers', () => {
     globalState.playerX = '';
     globalState.playerO = '';
-    //無理やりここでリセットした時にターンを初期化する。追記：上記にあるnextTurnのせいで初期化できなかった
+    //朝立ち上げたらOから始まるバグが直っていた。
     globalState.currentTurn = 'X';
 
     console.log(globalState);

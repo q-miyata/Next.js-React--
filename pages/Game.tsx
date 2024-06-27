@@ -66,7 +66,7 @@ const Game = () => {
       return;
     }
     console.log('useEffect!!!4544');
-    console.log(socket);
+    // console.log(socket);
 
     socket.on('setboard', ({ boardSize }) => {
       //undefinedが出たときの対策
