@@ -1,16 +1,48 @@
-import { useContext, useState, memo } from 'react';
+import { useContext, useState, memo, useEffect } from 'react';
 import ToggleButton from './ToggleButton';
 import { lightTheme, darkTheme } from './_app.styles';
 import { ThemeProvider, Global } from '@emotion/react';
 import Game from './Game';
-import { GameContext, GameProvider } from './GameContext';
-import User from './user';
+import { useAtom } from 'jotai';
+import { gameStateAtom, isDarkModeAtom, socketAtom } from './atoms';
+import io from 'socket.io-client';
 
+//AppコンポーネントでSocket.ioの接続を管理
 const AppContent = memo(() => {
-  const context = useContext(GameContext);
-  //const [isDarkMode, setIsDarkMode] = useState(false);
-  // const { isDarkMode, setIsDarkMode } = useGameContext();
-  const theme = context?.isDarkMode ? darkTheme : lightTheme;
+  const [socket, setSocket] = useAtom(socketAtom);
+  const [squares, setSquares] = useAtom(gameStateAtom);
+
+  useEffect(() => {
+    //Socket.IOのインスタンスを作成し、サーバーに接続
+    const newSocket = io('http://localhost:3001');
+
+    // 接続が確立された後、このインスタンスをAtomにセット
+    setSocket(newSocket);
+
+    // サーバーからの受信をリッスン
+    newSocket.on('connect', () => {
+      console.log('connected to server');
+    });
+
+    //サーバーから受け取ったスクエアをsetするから
+
+    // コンポーネントがアンマウントされるときにSocketを切断
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [setSocket, setSquares]);
+
+  // squaresの変更をサーバーに送信 追記：boardコンポーネントからおくるべきだったかも
+  useEffect(() => {
+    if (socket) {
+      console.log('squares has sent');
+      //サーバーへ送信
+      socket.emit('send_squares', squares);
+    }
+  }, [socket, squares]);
+
+  const [isDarkMode] = useAtom(isDarkModeAtom);
+  const theme = isDarkMode ? darkTheme : lightTheme;
   const global = {
     body: {
       backgroundColor: theme.body.background,
@@ -30,11 +62,7 @@ const AppContent = memo(() => {
 });
 
 const App = () => {
-  return (
-    <GameProvider>
-      <AppContent />
-    </GameProvider>
-  );
+  return <AppContent />;
 };
 
 export default App;

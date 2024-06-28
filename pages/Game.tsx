@@ -7,11 +7,15 @@ import {
   useContext,
 } from 'react';
 import { styles } from './_app.styles';
-
 import Board from './Board';
-import { Timer } from './Timer';
-import YonmokuBoard from './YonmokuBoard';
-import { GameContext, useGameContext } from './GameContext';
+import {
+  boardSizeAtom,
+  countTimeAtom,
+  currentTurnAtom,
+  playerSymbolAtom,
+} from './atoms';
+import { useAtom } from 'jotai';
+import { gameStateAtom, isXNextAtom, socketAtom } from './atoms';
 
 type HistoryObject = {
   squares: ('X' | 'O' | null)[];
@@ -19,24 +23,27 @@ type HistoryObject = {
 };
 
 const Game = () => {
-  const context = useContext(GameContext);
+  const [countTime, setCountTime] = useAtom(countTimeAtom);
   const [winner, setWinner] = useState<'O' | 'X' | null>(null);
-  // const [countTime, setCountTime] = useState<number>(5);
-  const { countTime, setCountTime } = useGameContext();
+
+  //対戦モード用のAtom
+  const [squares, setSquares] = useAtom(gameStateAtom);
+  const [socket] = useAtom(socketAtom);
+
   //ボード選択
-  //const [boardSize, setBoardSize] = useState<number | null>(null);
-  const { boardSize, setBoardSize } = useGameContext();
-  // const boardSize = context?.boardSize;
-  //?.で存在しなければundefinedを返す
-  //const setBoardSize = context?.setBoardSize;
+  const [boardSize, setBoardSize] = useAtom(boardSizeAtom);
+
+  const [playerSymbol, setPlayerSymbol] = useAtom(playerSymbolAtom);
+  const [currentTurn, setCurrentTurn] = useAtom(currentTurnAtom);
+
   const handleBoardSelection = useCallback(
     (size: number) => {
-      //undefinedが出たときの対策
-      if (setBoardSize) {
-        setBoardSize(size);
+      if (!socket) {
+        return;
       }
+      socket.emit('selectboard', { boardSize: size });
     },
-    [setBoardSize]
+    [setBoardSize, socket]
   );
 
   const [history, setHistory] = useState<HistoryObject[]>([
@@ -48,8 +55,49 @@ const Game = () => {
   ]);
   const [currentMove, setCurrentMove] = useState<number>(0);
 
+  //これをサーバーに送りたい。currentMoveをサーバで管理しないと正しく反映されない。
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove].squares;
+
+  setSquares(currentSquares);
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+    console.log('useEffect!!!4544');
+    // console.log(socket);
+
+    socket.on('setboard', ({ boardSize }) => {
+      //undefinedが出たときの対策
+      if (setBoardSize) {
+        console.log(`setting board size to `, boardSize);
+        setBoardSize(boardSize);
+      }
+    });
+
+    socket.on('setplayer', ({ playerSymbol }) => {
+      console.log(99999);
+      //undefinedが出たときの対策
+      if (setPlayerSymbol) {
+        console.log(`setting playerSymbol as `, playerSymbol);
+        setPlayerSymbol(playerSymbol);
+      }
+    });
+
+    socket.on('setturn', ({ turn }) => {
+      console.log(99999);
+      //undefinedが出たときの対策
+      if (setCurrentTurn) {
+        console.log(`setting turn as `, turn); //ここ再レンダリングがすごい
+        setCurrentTurn(turn);
+      }
+    });
+
+    //const xIsNextCurrentMove = {xIsNext,currentMove};
+
+    socket.emit('send_xIsNextCurrentMove', { xIsNext, currentMove });
+  }, [socket, xIsNext, currentMove]);
 
   const handlePlay = useCallback(
     (nextSquares: ('X' | 'O' | null)[], i: number) => {
@@ -58,9 +106,26 @@ const Game = () => {
         { squares: nextSquares, index: i },
       ];
       setHistory(nextHistory);
+
       setCurrentMove(nextHistory.length - 1);
+
+      setSquares(nextSquares);
+
+      //appContaintsから送ってるからここは用無し
+      // if (socket) {
+      //   socket.emit('squares', nextSquares);
+      // }
     },
-    [history, currentMove]
+    [
+      history,
+      currentMove,
+      setHistory,
+      setCurrentMove,
+      setSquares,
+      // setIsXNext,
+      socket,
+      //isXNext,
+    ]
   );
 
   const jumpTo = useCallback((nextMove: number) => {
@@ -68,9 +133,13 @@ const Game = () => {
     setCurrentMove(nextMove);
     //これで同じプレーヤーの履歴に帰っても秒数が回復する
     if (setCountTime) {
-      setCountTime(7);
+      setCountTime(15);
     }
   }, []);
+
+  const resetPlayers = () => {
+    socket.emit('resetplayers', {});
+  };
 
   const moves = useMemo(() => {
     return history.map((step, move) => {
@@ -141,6 +210,7 @@ const Game = () => {
       {/* <div css={styles.gameInfo}>
         <ol>{moves}</ol>
       </div> */}
+      <button onClick={resetPlayers}>Reset Players</button>
     </div>
   );
 };

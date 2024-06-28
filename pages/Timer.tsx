@@ -1,3 +1,4 @@
+import { useAtom } from 'jotai';
 import React, {
   useCallback,
   useMemo,
@@ -6,6 +7,7 @@ import React, {
   useRef,
   memo,
 } from 'react';
+import { currentTurnAtom } from './atoms';
 
 export const useCountDownInterval = (
   countTime: number | null,
@@ -13,11 +15,14 @@ export const useCountDownInterval = (
   //useState の状態更新関数を受け取っている
   setCountTime: (arg0: number | ((prevCountTime: number) => number)) => void,
   setWinner: (winner: 'X' | 'O' | null) => void,
-  xIsNext: boolean
+  winner: 'X' | 'O' | null
+  //xIsNext: boolean
   //isDraw: boolean
 ) => {
   //setIntervalの型定義はこれになる
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const [currentTurn, setCurrentTurn] = useAtom(currentTurnAtom); //サーバーでターン管理始めたのでxIsNextがなくなった
 
   useEffect(() => {
     if (countTime === null) return;
@@ -34,9 +39,12 @@ export const useCountDownInterval = (
           // 型アサーションを使用することで、TypeScriptコンパイラに対してintervalRef.currentの型がsetIntervalの戻り値の型であることを保証し、clearIntervalが適切に動作することを示しています
           clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
 
-          setWinner(xIsNext ? 'O' : 'X');
-
-          return prevCountTime;
+          if (!winner) {
+            setWinner(currentTurn ? 'O' : 'X');
+            return prevCountTime;
+          } else {
+            return prevCountTime;
+          }
         }
         return prevCountTime - 1;
       });
@@ -47,7 +55,7 @@ export const useCountDownInterval = (
       clearInterval(intervalRef.current as ReturnType<typeof setInterval>);
     };
     //依存配列のどれかが変わったら関数がrunする
-  }, [countTime, setCountTime, setWinner, xIsNext]);
+  }, [countTime, currentTurn]);
 };
 //countTimeはプロパティで、プロパティの型指定をしている
 export const Timer = memo(({ countTime }: { countTime: number }) => {

@@ -8,12 +8,22 @@ import React, {
   useRef,
   memo,
 } from 'react';
-import Square from './Square';
+
 //onSquareclickが再生成されるのでsquareコンポーネントの再レンダリングが止められなかった
 
 import { useCountDownInterval, Timer } from './Timer';
 import TouryouButton from './TouryouButton';
-import { useGameContext } from './GameContext';
+import { useAtom } from 'jotai';
+import {
+  countTimeAtom,
+  gameStateAtom,
+  playerSymbolAtom,
+  socketAtom,
+  currentTurnAtom,
+} from './atoms';
+import Square from './Square';
+import io from 'socket.io-client';
+
 export type BoardProps = {
   xIsNext: boolean;
   squares: ('X' | 'O' | null)[];
@@ -26,8 +36,7 @@ export type BoardProps = {
 };
 
 const Board = memo(function Board({
-  xIsNext,
-  squares,
+  //xIsNext,
   onPlay,
   setWinner,
   winner,
@@ -35,30 +44,81 @@ const Board = memo(function Board({
 }: // countTime,
 // setCountTime,
 BoardProps): JSX.Element {
-  const { countTime, setCountTime } = useGameContext();
+  const [socket, setSocket] = useAtom(socketAtom);
+  const [playerSymbol, setPlayerSymbol] = useAtom(playerSymbolAtom);
+  const [currentTurn, setCurrentTurn] = useAtom(currentTurnAtom);
+
+  //socket.on('received_xIsNext',xIsNext)
+
+  //squaresをatomではなくuseState管理に移す。
+  const [squares, setSquares] = useState(Array(size * size).fill(null));
+  const [countTime, setCountTime] = useAtom(countTimeAtom);
+  const [xIsNext, setxIsNext] = useState(true);
+  const [currentMove, setCurrentMove] = useState(0);
+
+  //null対策にuseEffectを使う
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleReceivedSquares = (receivedSquares) => {
+      //サーバーのスクエアをこのブラウザのボードにセット
+      setSquares(receivedSquares);
+    };
+
+    socket.on('received_squares', handleReceivedSquares);
+
+    return () => {
+      socket.off('received_squares', handleReceivedSquares);
+    };
+  }, [socket]);
 
   useEffect(() => {
-    setCountTime(60);
-  }, [xIsNext, setCountTime]);
+    if (!socket) return;
 
-  useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
+    const handleReceivedGameState = ({ receivedMove, receivedXIsNext }) => {
+      setCurrentMove(receivedMove);
+
+      setxIsNext(receivedXIsNext);
+    };
+
+    socket.on('send_xIsNextCurrentMove', handleReceivedGameState);
+
+    return () => {
+      socket.off('send_xIsNextCurrentMove', handleReceivedGameState);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    setCountTime(15);
+  }, [currentTurn, setCountTime]); //xIsNextをcurrentTurnに変更
+
+  //useCountDownInterval(countTime, setCountTime, setWinner, xIsNext);
+  useCountDownInterval(countTime, setCountTime, setWinner, winner); //xIsNextがなくなったから勝者判定のバグがでた？
 
   const handleClick = useCallback(
     (i: number) => {
+      console.log('33312123 handleClick', i, playerSymbol);
+      socket.emit('move', { coordinate: i, player: playerSymbol });
+
       const filledsquares = squares[i];
+
       if (winner || filledsquares || isDraw) {
         return;
       }
-      const nextSquares = squares.slice();
-      if (xIsNext) {
-        nextSquares[i] = 'X';
-      } else {
-        nextSquares[i] = 'O';
+      if (currentTurn !== playerSymbol) {
+        return;
       }
+      const nextSquares = squares.slice();
+      nextSquares[i] = playerSymbol;
+      // if (xIsNext) {
+      //   nextSquares[i] = 'X';
+      // } else {
+      //   nextSquares[i] = 'O';
+      // }
       onPlay(nextSquares, i);
     },
 
-    [squares, xIsNext, onPlay, winner]
+    [squares, xIsNext, onPlay, winner, playerSymbol]
   );
 
   const {
@@ -70,20 +130,21 @@ BoardProps): JSX.Element {
   useEffect(() => {
     if (calcWinner) {
       setWinner(calcWinner);
+      setCountTime(0);
     }
   }, [calcWinner]);
 
   const status = useMemo(() => {
-    if (winner) {
+    if (winner && !isDraw) {
       setCountTime(0);
       return 'Winner: ' + winner;
     } else if (isDraw) {
       setCountTime(0);
       return 'Draw';
     } else {
-      return 'Next player: ' + (xIsNext ? 'X' : 'O');
+      return 'Next player: ' + currentTurn; //playerSymbol
     }
-  }, [winner, isDraw, xIsNext]);
+  }, [winner, isDraw, xIsNext, currentTurn]);
 
   //{/* <div css={styles.status}>{status}</div> */}
   const Status = () => {
@@ -121,41 +182,24 @@ BoardProps): JSX.Element {
     });
   }, [size, squares, handleClick]);
 
-  // const boardRows = useMemo(() => {
-  //   let rows = [];
-  //   for (let row = 0; row < size; row++) {
-  //     let squaresInRow = [];
-  //     for (let col = 0; col < size; col++) {
-  //       squaresInRow.push(renderSquare(row * size + col));
-  //     }
-  //     rows.push(
-  //       <div key={row} style={{ display: 'flex' }}>
-  //         {squaresInRow}
-  //       </div>
-  //     );
-  //   }
-  //   return rows;
-  // }, [size, squares, handleClick]);
-
   return (
     <div>
+      You are {playerSymbol} <br />
+      turn : {currentTurn} <br />
       <Timer countTime={countTime} />
-
       <Status />
       <TouryouButton
         setWinner={setWinner}
         xIsNext={xIsNext}
         setCountTime={setCountTime}
       />
-      {/* <div css={styles.boardRow}> */}
       {boardRows}
-
       <Annotation />
     </div>
   );
 });
 
-type Bingo = ('X' | 'O' | null)[];
+export type Bingo = ('X' | 'O' | null)[];
 
 function calculateWinner(squares: Bingo, size: number) {
   const findWinningLines = (squares: Bingo) => {
@@ -352,7 +396,7 @@ export default Board;
 // function calculateWinner(squares: Bingo, size: number) {
 //   const findWinningLines = (squares: Bingo) => {
 //     // const size =;
-//     console.log('Sanmoku size is' + size);
+//
 //     //Array.prototype.keys()メソッド マスの並びのインデックス　rangeの中身は[0,1,2]
 //     const range = [...Array(size).keys()];
 //     //ネストしたmap iは行jは列　よって　0*3+0, 0*3+1 0*3+2 で[0,1,2] 内側のmapはincrement j
