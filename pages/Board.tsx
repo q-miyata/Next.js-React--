@@ -63,7 +63,6 @@ BoardProps): JSX.Element {
     const handleReceivedSquares = (receivedSquares) => {
       //サーバーのスクエアをこのブラウザのボードにセット
       setSquares(receivedSquares);
-      console.log('squares issssssss: ' + receivedSquares); //squaresをreceivedSquaresに変更
     };
 
     socket.on('received_squares', handleReceivedSquares);
